@@ -260,11 +260,15 @@ router.replace = function(...args) {
 router.beforeEach((to, form, next) => {
   const { title, backgroundColor, footer, home, auth } = to.meta;
   console.log(to.name, form.name);
-  // if (localStorage.getItem('LOGIN') != null && localStorage.getItem('LOGIN') !== undefined){
-  //   this.$store.commit("LOGIN", JSON.parse(localStorage.getItem('LOGIN')));
-  // }
-  if (auth === true && !$store.state.app.token) {
 
+
+
+   let token = '';
+  if (JSON.parse(localStorage.getItem('LOGIN')) != null){
+    token = JSON.parse(localStorage.getItem('LOGIN'))['token']
+  }
+
+  if (auth === true && !token) {
     if (form.name === "Login") return;
     return toLogin(true, to.fullPath);
   }

@@ -28,20 +28,30 @@ class ShortLetterRepositories
     public static function send($switch, $phone, array $data, string $template, $logMsg = '')
     {
         if ($switch && $phone) {
-            $sms = new Sms([
-                'sms_account' => sys_config('sms_account'),
-                'sms_token' => sys_config('sms_token'),
-                'site_url' => sys_config('site_url')
-            ]);
-            $res = $sms->send($phone, $template, $data);
-            if ($res === false) {
-                $errorSmg = $sms->getError();
-                Log::info($logMsg ?? $errorSmg);
-                return $errorSmg;
-            } else {
-                SmsRecord::sendRecord($phone, $res['data']['content'], $res['data']['template'], $res['data']['id']);
+            $statusStr = array(
+                "0" => "短信发送成功",
+                "-1" => "参数不全",
+                "-2" => "服务器空间不支持,请确认支持curl或者fsocket，联系您的空间商解决或者更换空间！",
+                "30" => "密码错误",
+                "40" => "账号不存在",
+                "41" => "余额不足",
+                "42" => "帐户已过期",
+                "43" => "IP地址限制",
+                "50" => "内容含有敏感词"
+            );
+            $smsapi = "http://api.smsbao.com/";
+            $user = "hhw1016"; //短信平台帐号
+            $pass = md5("a12345678"); //短信平台密码
+            $code = $data['code'];
+            $content="【乐享易购】您的验证码为{$code}，在1分钟内有效。";//要发送的短信内容
+            $phones = $phone;//要发送短信的手机号码
+            $sendurl = $smsapi."sms?u=".$user."&p=".$pass."&m=".$phones."&c=".urlencode($content);
+            $result =file_get_contents($sendurl) ;
+            if ($result == "0"){
+                return  true;
+            }else{
+                return  false;
             }
-            return true;
         } else {
             return false;
         }

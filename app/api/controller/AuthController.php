@@ -5,6 +5,7 @@ namespace app\api\controller;
 
 
 use app\admin\model\sms\SmsRecord;
+use app\admin\model\system\SystemAdmin;
 use app\http\validates\user\RegisterValidates;
 use app\models\store\StoreOrder;
 use app\models\user\User;
@@ -191,12 +192,23 @@ class AuthController
      */
     public function register(Request $request)
     {
+
         list($account, $captcha, $password, $spread) = UtilService::postMore([['account', ''], ['captcha', ''], ['password', ''], ['spread', 0]], $request, true);
         try {
             validate(RegisterValidates::class)->scene('register')->check(['account' => $account, 'captcha' => $captcha, 'password' => $password]);
         } catch (ValidateException $e) {
             return app('json')->fail($e->getError());
         }
+        $invite_code = input('post.invite_code');
+
+        if (!$invite_code){
+            return app('json')->fail('请输入邀请码');
+        }
+        if (!SystemAdmin::where(['invite_code'=>$invite_code])->find()){
+            return app('json')->fail('邀请码无效');
+        }
+        $pid = SystemAdmin::where(['invite_code'=>$invite_code])->value('id');
+
         $verifyCode = CacheService::get('code_' . $account);
         if (!$verifyCode)
             return app('json')->fail('请先获取验证码');
@@ -206,7 +218,7 @@ class AuthController
         if (strlen(trim($password)) < 6 || strlen(trim($password)) > 16)
             return app('json')->fail('密码必须是在6到16位之间');
         if ($password == '123456') return app('json')->fail('密码太过简单，请输入较为复杂的密码');
-        $registerStatus = User::register($account, $password, $spread);
+        $registerStatus = User::register($account, $password, $spread,$pid);
         if ($registerStatus) return app('json')->success('注册成功');
         return app('json')->fail(User::getErrorInfo('注册失败'));
     }

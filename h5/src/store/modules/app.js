@@ -40,6 +40,7 @@ const mutations = {
   //   store.set(LOGIN_KEY, token, expires_time);
   // },
   LOGIN(state, datas) {
+
     state.token = datas.token;
     state.expires_time = datas.expires_time;
     store.set(LOGIN_KEY, datas.token, datas.expires_time);

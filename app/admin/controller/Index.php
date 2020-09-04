@@ -26,6 +26,8 @@ class Index extends AuthController
         $site_logo = SystemConfig::getOneConfig('menu_name', 'site_logo')->toArray();
         $this->assign([
             'menuList' => SystemMenus::menuList(),
+            'ewm_url' => 'http://'.$_SERVER['HTTP_HOST'].'/login?code='.$adminInfo['invite_code'],
+            'admin_info' => $this->adminInfo,
             'site_logo' => json_decode($site_logo['value'], true),
             'new_order_audio_link' => sys_config('new_order_audio_link'),
             'role_name' => SystemRole::where('id', $roles[0])->field('role_name')->find(),
@@ -38,6 +40,7 @@ class Index extends AuthController
     //后台首页内容
     public function main()
     {
+        $adminInfo = $this->adminInfo->toArray();
         /*首页第一行统计*/
         $now_month = strtotime(date('Y-m'));//本月
         $pre_month = strtotime(date('Y-m', strtotime('-1 month')));//上月
@@ -134,6 +137,7 @@ class Index extends AuthController
             'first_line' => $first_line,
             'second_line' => $second_line,
             'topData' => $topData,
+            'ewm_url'=>'http://'.$_SERVER['HTTP_HOST'].'/login?code='.$adminInfo['invite_code'],
         ]);
         return $this->fetch();
     }
@@ -566,14 +570,32 @@ class Index extends AuthController
     {
         header('Content-type:text/json');
 
-        $starday = date('Y-m-d', strtotime('-30 day'));
-        $yesterday = date('Y-m-d');
+        $starday = strtotime('-30 day');
+        $yesterday = time();
+        $admin_info = SystemAdmin::activeAdminInfoOrFail();
+        $power = $admin_info['power'];
+
+
+        $where = [];
+
+        if ($power == 9998){
+            $manager_ids = SystemAdmin::where(['pid'=>$admin_info['id'],'power'=>9997])->column('id');
+            //客户id
+            $user_ids = \app\models\user\User::where(['pid'=>$manager_ids])->column('uid');
+            $where['uid'] = $user_ids;
+        }
+        if ($power == 9997){
+            $user_ids = \app\models\user\User::where(['pid'=>$admin_info['id']])->column('uid');
+            $where['uid'] = $user_ids;
+        }
 
         $user_list = UserModel::where('add_time', 'between time', [$starday, $yesterday])
+            ->where($where)
             ->field("FROM_UNIXTIME(add_time,'%m-%e') as day,count(*) as count")
             ->group("FROM_UNIXTIME(add_time, '%Y%m%e')")
             ->order('add_time asc')
             ->select()->toArray();
+
         $chartdata = [];
         $data = [];
         $chartdata['legend'] = ['用户数'];//分类

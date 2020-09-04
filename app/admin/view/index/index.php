@@ -28,9 +28,11 @@
             <ul class="nav" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element admin_open">
+                        <?php if($admin_info['power'] == 9997): ?>
                         <span>
-                            <img alt="image" class="imgbox" src="{$site_logo}" onerror="javascript:this.src='{__ADMIN_PATH}images/admin_logo.png';"/>
+                            <img alt="image" class="imgbox" src="http://qr.liantu.com/api.php?text=<?= $ewm_url ?>" onerror="javascript:this.src='{__ADMIN_PATH}images/admin_logo.png';"/>
                         </span>
+                        <?php endif;?>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear" style="margin-top: 20px;">
                                <span class="block m-t-xs"><strong class="font-bold">{$_admin['real_name']}</strong></span>
@@ -46,6 +48,7 @@
                             <li><a href="{:Url('login/logout')}">安全退出</a>
                             </li>
                         </ul>
+
                     </div>
                     <div class="logo-element">CB
                     </div>
@@ -77,6 +80,7 @@
             </ul>
         </div>
     </nav>
+
     <!--左侧导航结束-->
     <!--右侧部分开始-->
     <div id="page-wrapper" class="gray-bg dashbard-1">
@@ -145,6 +149,7 @@
             </div>
         </div>
         <!--内容展示模块-->
+        <?php $url = $ewm_url ?>
         <div class="row J_mainContent" id="content-main">
             <iframe class="J_iframe" name="iframe_crmeb_main" width="100%" height="100%" src="{:Url('Index/main')}" frameborder="0" data-id="{:Url('Index/main')}" seamless></iframe>
         </div>

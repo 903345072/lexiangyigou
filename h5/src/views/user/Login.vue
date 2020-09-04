@@ -118,6 +118,14 @@
           </div>
         </div>
         <div class="item">
+          <div>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-code_1"></use>
+            </svg>
+            <input type="text" placeholder="输入邀请码" v-model="invite_code" />
+          </div>
+        </div>
+        <div class="item">
           <div class="align-left">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-code_1"></use>
@@ -195,8 +203,8 @@ export default {
   mixins: [sendVerifyCode],
   data: function() {
     return {
-      navList: ["账号登录", "快速登录"],
-      current: 1,
+      navList: ["账号登录"],
+      current: 0,
       account: "",
       password: "",
       captcha: "",
@@ -206,14 +214,28 @@ export default {
       keyCode: "",
       codeUrl: "",
       codeVal: "",
+      invite_code: "",
       isShowCode: false
     };
   },
   mounted: function() {
     this.getCode();
     this.getLogoImage();
+    this.invite_code = this.getQueryVariable('code')?this.getQueryVariable('code'):'';
+    if (this.getQueryVariable('code')){
+      this.formItem = 0;
+    }
   },
   methods: {
+   getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+      var pair = vars[i].split("=");
+      if(pair[0] === variable){return pair[1];}
+    }
+    return false;
+  },
     again() {
       this.codeUrl =
         VUE_APP_API_URL +
@@ -283,14 +305,16 @@ export default {
     },
     async register() {
       var that = this;
-      const { account, captcha, password } = that;
+      const { account, captcha, password,invite_code } = that;
       try {
         await that
           .$validator({
+
             account: [
               required(required.message("手机号码")),
               chs_phone(chs_phone.message())
             ],
+
             captcha: [
               required(required.message("验证码")),
               alpha_num(alpha_num.message("验证码"))
@@ -306,6 +330,7 @@ export default {
         return validatorDefaultCatch(e);
       }
       register({
+        invite_code: that.invite_code,
         account: that.account,
         captcha: that.captcha,
         password: that.password,
@@ -357,7 +382,7 @@ export default {
       this.current = index;
     },
     async submit() {
-      const { account, password, codeVal } = this;
+      const { account, password, codeVal, invite_code } = this;
       try {
         await this.$validator({
           account: [

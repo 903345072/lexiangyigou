@@ -71,6 +71,7 @@ export default {
   },
   mounted: function() {
     this.setOpenShare();
+
   },
   methods: {
     setOpenShare: function() {

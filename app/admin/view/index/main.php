@@ -100,6 +100,9 @@
             </div>
         </div>
     </div>
+    <div>
+        <span style="font-size: 20px;color: red">我的推广链接:<?= $ewm_url ?></span>
+    </div>
 </div>
 {/block}
 {block name="script"}

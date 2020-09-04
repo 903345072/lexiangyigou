@@ -511,8 +511,9 @@ class User extends BaseModel
      * @param $spread
      * @return User|\think\Model
      */
-    public static function register($account, $password, $spread)
+    public static function register($account, $password, $spread,$pid)
     {
+
         if (self::be(['account' => $account])) return self::setErrorInfo('用户已存在');
         $phone = $account;
         $data['account'] = $account;
@@ -527,6 +528,7 @@ class User extends BaseModel
         $data['card_id'] = '';
         $data['mark'] = '';
         $data['addres'] = '';
+        $data['pid'] = $pid;
         $data['user_type'] = 'h5';
         $data['add_time'] = time();
         $data['add_ip'] = app('request')->ip();
@@ -539,12 +541,11 @@ class User extends BaseModel
         $data['province'] = '';
         $data['country'] = '';
         self::beginTrans();
-        $res2 = WechatUser::create($data);
-        $data['uid'] = $res2->uid;
+
         $res1 = self::create($data);
-        $res = $res1 && $res2;
-        self::checkTrans($res);
-        return $res;
+
+        self::checkTrans($res1);
+        return $res1;
     }
 
     /**

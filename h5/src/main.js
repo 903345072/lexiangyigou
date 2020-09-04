@@ -17,6 +17,7 @@ import "@assets/css/reset.css";
 import "@assets/css/style.css";
 import { isWeixin, parseQuery } from "@utils";
 import vueLazyLoad from "vue-lazyload";
+import $store from "./store";
 
 Vue.use(vueLazyLoad, {
   preload: 1.3, //加载高度比。
@@ -84,10 +85,7 @@ const $vm = new Vue({
   store,
   render: h => h(App),
   beforeMount(){
-    // if (localStorage.getItem('LOGIN') != null && localStorage.getItem('LOGIN') !== undefined){
-    //   this.$store.commit("LOGIN", JSON.parse(localStorage.getItem('LOGIN')));
-    // }
-
+      this.$store.commit("LOGIN", JSON.parse(localStorage.getItem('LOGIN')));
   }
 });
 

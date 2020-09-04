@@ -11,7 +11,11 @@ const instance = axios.create({
 const defaultOpt = { login: true };
 
 function baseRequest(options) {
-  const token = $store.state.app.token;
+
+  let token = $store.state.app.token;
+  if (JSON.parse(localStorage.getItem('LOGIN')) != null){
+    token = JSON.parse(localStorage.getItem('LOGIN'))['token']
+  }
   const headers = options.headers || {};
   headers["Authori-zation"] = "Bearer " + token;
   options.headers = headers;
