@@ -1,0 +1,415 @@
+<navbar parameter='{{parameter}}' logoUrl="{{logoUrl}}"></navbar>
+<view class="indexs">
+   <view class="indexTip" style="top:{{navH+13}}rpx" hidden="{{iShiddenTip}}">
+       <view class="tip acea-row row-between-wrapper">
+          <view class="text">点击“<image src="/images/spot.png"></image>”添加到我的小程序， 微信首页下拉即可访问商城。</view>
+       <view class="iconfont icon-guanbi1" bindtap="closeTip"></view>
+       </view> 
+    </view>
+    <Tabs color="#fff" active="{{tapActive}}" bind:click="categoryTap">
+      <Tab title="精选">
+        <view class="wrapper">
+          <view class="slider-banner banner">
+            <swiper indicator-dots="true"
+            autoplay="{{autoplay}}" circular="{{circular}}" interval="3000" duration="500" indicator-color="rgba(0,0,0,0.2)" indicator-active-color="#ff3366">
+              <swiper-item wx:for="{{banner}}" wx:key='index'>
+                <navigator url="{{item.url ? item.url : ''}}" class="pictrue acea-row row-middle" hover-class='none'>
+                  <image src="{{item.pic}}" class="slide-image"></image>
+                </navigator >
+              </swiper-item>
+            </swiper>
+          </view>
+          <view class="nav acea-row">
+            <block wx:for="{{menus}}" wx:key='index'>
+               <navigator url="{{item.url ? item.url : ''}}" wx:if="{{item.show == '1'}}" class="item" open-type='switchTab' hover-class='none'>
+              <view class="pictrue"><image src="{{item.pic}}"></image></view>
+              <view>{{ item.name }}</view>
+            </navigator>
+            <navigator url="{{item.url ? item.url : ''}}" wx:else class="item"  hover-class='none'>
+              <view class="pictrue"><image src="{{item.pic}}"></image></view>
+              <view>{{ item.name }}</view>
+            </navigator>
+            </block>
+          </view>
+          <view class="scroll-coupon" wx:if="{{getCouponList.length}}">
+             <scroll-view class="scroll-view_x" enable-flex scroll-x style="width:auto;overflow:hidden;">
+               <view
+                  class="item {{item.is_use ? 'on' : ''}}"
+                  data-index="{{index}}"
+                  bindtap="receiveCoupon"
+                  wx:for="{{getCouponList}}"
+                  wx:key='index'
+                >
+                  <image src="/images/label01.png" class="lable" wx:if='{{item.is_use === true}}'></image>
+                  <image src="/images/label02.png" class="lable" wx:elif='{{item.is_use === 2}}'></image>
+                  <view class="coupon-slide acea-row row-center-wrapper">
+                    <view class="money">
+                      ¥<text class="num">{{ item.coupon_price }}</text>
+                    </view>
+                    <view>
+                      <view class="minPrice">
+                        满¥<text class="num">{{ item.use_min_price }}</text>可用
+                      </view>
+                      <view class="time">
+                        {{ item.start_time ? item.start_time + "-" : ""
+                        }}{{ item.end_time }}
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class="more"><navigator url="/pages/user_get_coupon/index" hover-class="none">领取更多</navigator></view>
+             </scroll-view>
+          </view>
+          <view class="activity" wx:if="{{activity.length}}">
+            <view class="title"><image src="/images/title.png"></image></view>
+            <view class="activityCon acea-row row-between-wrapper">
+              <navigator url="{{item.link ? item.link : ''}}" class="left"
+              style="{{'background-image: url(' + item.pic + ');'}}"
+                hover-class="none" wx:for="{{activity}}" wx:if="{{index == 1}}" wx:key='index'>
+                <view class="name">{{ item.title }}</view>
+                <view class="info">{{ item.info }}</view>
+                <view class='timeCon'>
+                  <text class='num'>{{countDownHour}}</text> :
+                  <text class='num'>{{countDownMinute}}</text> :
+                  <text class='num'>{{countDownSecond}}</text>
+                </view>
+              </navigator >
+              <view class="right acea-row row-column-between">
+                <navigator url="{{item.link ? item.link : ''}}"
+                  class="item" style="background-image: url('{{item.pic}}')"
+                  wx:for="{{activity}}" wx:key='index' hover-class="none" wx:if="{{index == 0 || index == 2}}">
+                  <view class="name">{{ item.title }}</view>
+                  <view class="info">{{ item.info }}</view>
+                </navigator >
+              </view>
+            </view>
+          </view>
+              <view class="liveBroadcast" wx:if='{{liveList.length || liveInfo.roomid}}'>
+       <view class="publicTitle acea-row row-center-wrapper">
+              <image src="/images/tv.png"></image>
+              <!-- <navigator hover-class="none" url='/pages/first-new-product/index?type=3' class="more">更多 ></navigator> -->
+            </view>
+        <!-- end:结束；time：直播时间 -->
+        <navigator wx:if='{{liveInfo.roomid}}' hover-class="none" url="plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id={{liveInfo.roomid}}" class="broadcast time">
+           <view class="pictrue">
+              <image src="{{liveInfo.share_img}}"></image>
+              <view class="label" wx:if='{{liveInfo.live_status == 101}}'><text class="iconfont icon-zhibo"></text>直播中</view>
+              <view class="label" wx:if='{{liveInfo.live_status == 103}}'><text class="iconfont icon-zhibojieshux"></text>已结束</view>
+              <view class="label" wx:if='{{liveInfo.live_status == 102}}'><text class="iconfont icon-shijian"></text>直播时间 {{liveInfo._start_time}}</view>
+           </view>
+           <view class="text line1">{{liveInfo.name}}</view>
+        </navigator>
+        <view class="list" wx:if="{{liveList.length}}">
+           <scroll-view class="scroll-view_x" scroll-x style="width:auto;overflow:hidden;">
+              <navigator hover-class="none" wx:for='{{liveList}}' wx:key='index' url="plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id={{item.roomid}}" class="item">
+                  <view class="pictrue">
+                    <image src="{{item.share_img}}"></image>
+                    <view class="label" wx:if='{{item.live_status == 101}}'><text class="iconfont icon-zhibo"></text>直播中</view>
+              <view class="label" wx:if='{{item.live_status == 103}}'><text class="iconfont icon-zhibojieshux"></text>已结束</view>
+              <view class="label" wx:if='{{item.live_status == 102}}'><text class="iconfont icon-shijian"></text>直播时间 {{item._start_time}}</view>
+                  </view>
+                  <view class="text line1">{{item.name}}</view>
+                </navigator>
+            </scroll-view>
+        </view>
+    </view>
+          <view class="flashSale" wx:if="{{seckillCont}}">
+            <view class="title acea-row row-between row-bottom">
+              <view class="left acea-row row-middle">
+                <view class="pictrue">
+                  <image src="/images/buyTitle.png"></image>
+                </view>
+                <view class="text">
+                  <view>top sellers</view>
+                  <view class="chinese">拼手速抢惊喜 每日更新</view>
+                </view>
+              </view>
+              <view class="right acea-row row-middle">
+                <view class="item">
+                  <text class="iconfont icon-xuanzhong"></text>限时低价
+                </view>
+                <view class="item">
+                  <text class="iconfont icon-xuanzhong"></text>正品保证
+                </view>
+              </view>
+            </view>
+            <view class="pictrueBg"><image src="/images/timeBg.png"></image></view>
+            <view class="timeItem">
+                <scroll-view class="scroll-view_x" scroll-x scroll-with-animation scroll-left="{{scrollLeft}}">
+                    <view class="timeLen item {{killIndex==index?'on':''}}" data-index="{{index}}" bindtap="setTime" wx:for="{{timeList}}" wx:key='index'>
+                        <view class="time">{{ item.time }}</view>
+                        <view class="stateCon acea-row row-center-wrapper">
+                            <view class="state acea-row row-center-wrapper">
+                                {{ item.state }}
+                            </view>
+                        </view>
+                    </view>
+                </scroll-view>
+            </view>
+            <view class="list">
+                    <scroll-view class="scroll-view_x acea-row" scroll-x style="width:auto;overflow:hidden;">
+                      <view class="item" wx:for="{{seckillList}}" wx:for-item="itemSeckill" wx:key='index'>
+                        <view class="pictrue" bindtap="goDetail" data-id="{{itemSeckill.id}}">
+                          <image src="{{itemSeckill.image}}"></image>
+                          <view class="bar">
+                            <view class="pos">
+                            <view class="num acea-row row-center-wrapper" style="width:{{itemSeckill.percent}}%;"></view>
+                            <view class="stock">已抢{{itemSeckill.percent}}%</view>
+                            </view>
+                          </view>
+                        </view>
+                        <!-- <view class="pictrue" wx:if='{{status === 2}}'>
+                          <image src="{{itemSeckill.image}}"></image>
+                           <view class="bar">
+                            <view class="pos">
+                            <view class="num acea-row row-center-wrapper" style="width:{{itemSeckill.percent}}%;"></view>
+                            <view class="stock">{{itemSeckill.percent}}%</view>
+                            </view>
+                          </view>
+                        </view>
+                        <view class="pictrue" wx:if='{{status === 0}}'>
+                          <image src="{{itemSeckill.image}}"></image>
+                           <view class="bar">
+                            <view class="pos">
+                            <view class="num acea-row row-center-wrapper" style="width:{{itemSeckill.percent}}%;"></view>
+                            <view class="stock">{{itemSeckill.percent}}%</view>
+                            </view>
+                          </view>
+                        </view> -->
+                        <view class="text">
+                          <view class="name line1">{{ itemSeckill.title }}</view>
+                          <view class="ot-money">
+                            ¥{{ itemSeckill.ot_price }}
+                          </view>
+                          <view class="money font-color">
+                              ¥<text class="num">{{ itemSeckill.price }}</text>
+                          </view>
+                        </view>
+                      </view>
+                    </scroll-view>
+                </view>
+          </view>
+          <!-- <navigator 
+            url="{{lovely[0].link ? lovely[0].link : ''}}"
+            class="advert"
+            hover-class="none"
+            wx:if="{{lovely.length}}"
+            >
+            <image src="{{lovely[0].img}}"></image>
+            </navigator> -->
+             <view class='advert' wx:if="{{newGoodsBananr}}">
+                <block>
+                  <image src='{{newGoodsBananr}}'></image>
+                </block>  
+              </view>
+          <view class="newProducts" wx:if="{{info.firstList.length > 0}}">
+            <view class="publicTitle acea-row row-center-wrapper">
+              <image src="/images/newsTitle.png"></image>
+              <navigator hover-class="none" url='/pages/first-new-product/index?type=3' class="more">更多 ></navigator>
+            </view>
+            <view class="newSwiper">
+              <swiper autoplay="{{autoplay}}" circular="{{circular}}" interval="{{intervalNew}}" duration="{{durationNew}}" previous-margin="110px" next-margin="110px" bindchange="bindchange">
+                <swiper-item wx:for="{{info.firstList}}" wx:key='index'>
+                  <view bindtap="goDetailType" data-items='{{item}}' class="item {{avtiveIndex===index?'active':'quiet'}}">
+                    <image src="{{item.image}}"></image>
+                    <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type ==='1'}}">秒杀</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '2'}}">砍价</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '3'}}">拼团</text>
+                  </view>
+                </swiper-item>
+              </swiper>
+              <view class="text" wx:for="{{info.firstList}}" wx:key='index'>
+                <view wx:if="{{index === avtiveIndex}}">
+                  <view class="name line1">{{ item.store_name }}</view>
+                  <view class="money font-color">
+                    ¥<text class="num">{{ item.price }}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view
+            class="recommend"
+            wx:if="{{info.bastList.length || info.bastBanner.length}}"
+          >
+            <view class="publicTitle acea-row row-center-wrapper">
+              <image src="/images/boutiqueTitle.png"></image>
+              <navigator hover-class="none" url='/pages/first-new-product/index?type=1' class="more"
+                >更多 ></navigator>
+            </view>
+            <view class="slider-banner recommendSwiper" wx:if="{{info.bastBanner.length}}">
+              <swiper autoplay="true" indicator-dots="true"
+                 circular="{{circular}}" interval="3000" duration="500" indicator-color="rgba(0,0,0,0.2)" indicator-active-color="#ff3366">
+                <swiper-item wx:for="{{info.bastBanner}}" wx:key='index'>
+                  <navigator url="{{item.url ? item.url : ''}}" class="pictrue acea-row row-middle" hover-class="none">
+                    <image src="{{item.img}}"></image>
+                  </navigator >
+                </swiper-item>
+              </swiper>
+            </view>
+            <view class="publicList acea-row row-between-wrapper">
+              <view bindtap="goDetailType" data-items='{{item}}' class="item"
+                wx:for="{{info.bastList}}" wx:key='index'>
+                <view class="pictrue">
+                  <image src="{{item.image}}"></image>
+                  <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type ==='1'}}">秒杀</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '2'}}">砍价</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '3'}}">拼团</text>
+                </view>
+                <view class="text">
+                  <view class="name line1">{{ item.store_name }}</view>
+                  <view class="acea-row row-between-wrapper">
+                    <view>
+                      <view class="money font-color">
+                        ¥<text class="num">{{ item.price }}</text>
+                      </view>
+                      <view class="ot-money">¥{{ item.ot_price }}</view>
+                    </view>
+                    <view class="cart acea-row row-center-wrapper">
+                      <text class="iconfont icon-mzshopping"></text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="hotList" wx:if="{{likeInfo.length}}">
+            <view class="publicTitle acea-row row-center-wrapper">
+              <image src="/images/hotTitle.png"></image>
+              <navigator url="/pages/first-new-product/index?type=2" class="more" hover-class="none">更多 ></navigator>
+            </view>
+            <view class="list acea-row">
+              <navigator url="/pages/goods_details/index?id={{item.id}}" class="item"
+              wx:for="{{likeInfo}}" wx:key='index'>
+                <view class="pictrue">
+                  <image src="{{item.image}}"></image>
+                  <image src="/images/one01.png" class="icon" wx:if='{{index === 0}}'></image>
+                 <image src="/images/two02.png" class="icon" wx:if='{{index === 1}}'></image>
+                 <image src="/images/three03.png" class="icon" wx:if='{{index === 2}}'></image> 
+                </view>
+                <view class="text">
+                  <view class="name line1">{{ item.store_name }}</view>
+                  <view class="money font-color">
+                    ¥<text class="num">{{ item.price }}</text><text class="ot-money">¥{{ item.ot_price }}</text>
+                  </view>
+                </view>
+              </navigator >
+            </view>
+          </view>
+          <view class="promotion" wx:if="{{benefit.length}}">
+            <view class="publicTitle acea-row row-center-wrapper">
+              <image src="/images/promotionTitle.png"></image>
+              <navigator url="/pages/promotional-items/index" class="more" hover-class="none">更多 ></navigator>
+            </view>
+            <view class="publicList acea-row row-between-wrapper">
+              <view bindtap="goDetailType" data-items='{{item}}' class="item"
+                wx:for="{{benefit}}" wx:key='index'>
+                <view class="pictrue">
+                  <image src="{{item.image}}"></image>
+                   <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type ==='1'}}">秒杀</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '2'}}">砍价</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '3'}}">拼团</text>
+                </view>
+                <view class="text">
+                  <view class="name line1">{{ item.store_name }}</view>
+                  <view class="acea-row row-between-wrapper">
+                    <view>
+                      <view class="money font-color">
+                        ¥<text class="num">{{ item.price }}</text><text class="label bg-color">疯抢</text>
+                      </view>
+                      <view class="ot-money">¥{{ item.ot_price }}</view>
+                    </view>
+                    <view class="cart acea-row row-center-wrapper">
+                      <text class="iconfont icon-mzshopping"></text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="recommendList" wx:if='{{hostProduct.length > 0}}'>
+            <view class="title">
+              <image src="/images/becommendTitle.png"></image>
+            </view>
+            <view class="publicList acea-row row-between-wrapper">
+              <view bindtap="goDetailType" data-items='{{item}}' wx:for="{{hostProduct}}" wx:key='index' class="item">
+                <view class="pictrue">
+                  <image src="{{item.image}}"></image>
+                   <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type ==='1'}}">秒杀</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '2'}}">砍价</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{item.activity && item.activity.type === '3'}}">拼团</text>
+                </view>
+                <view class="text">
+                  <view class="name line1">{{ item.store_name }}</view>
+                  <view class="acea-row row-between-wrapper">
+                    <view>
+                      <view class="money font-color">
+                        ¥<text class="num">{{ item.price }}</text>
+                      </view>
+                      <view class="ot-money">¥{{ item.ot_price }}</view>
+                    </view>
+                    <view class="cart acea-row row-center-wrapper">
+                      <text class="iconfont icon-mzshopping"></text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+                <view class='loadingicon acea-row row-center-wrapper' wx:if='{{hostProduct.length > 0}}'>
+        <text class='loading iconfont icon-jiazai' hidden='{{recommend.loading==false}}'></text>
+        {{recommend.loadTitle}}
+     </view>
+            </view>
+          </view>
+        </view>
+      </Tab>
+      <Tab wx:for="{{categoryOne}}" title="{{item.cate_name}}" wx:key='index'>
+        <view class="wrapper">
+          <view class="scroll acea-row row-middle">
+             <view class="scroll-classify" wx:if="{{item.children.length}}">
+              <scroll-view class="scroll-view_x" scroll-x style="width:auto;overflow:hidden;">
+                <view class="item {{categoryActive === indexn ? 'on' : ''}}" bindtap="productTap" data-indexn="{{indexn}}" wx:for="{{item.children}}" wx:for-item="itemn" wx:for-index="indexn" wx:key='index'>
+                    <view class="pictrue">
+                      <image src="{{itemn.pic}}"></image>
+                    </view>
+                    <view class="name line1">{{ itemn.cate_name }}</view>
+                </view>
+              </scroll-view>
+          </view>
+          </view>
+          <view class="classifyList acea-row row-between-wrapper">
+            <view bindtap="goDetailType" data-items='{{productItem}}' class="item" wx:for="{{productList}}" wx:for-item="productItem" wx:key='index'>
+              <view class="pictrue">
+                <image src="{{productItem.image}}"></image>
+                  <text class="pictrue_log_medium pictrue_log_class" wx:if="{{productItem.activity && productItem.activity.type ==='1'}}">秒杀</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{productItem.activity && productItem.activity.type === '2'}}">砍价</text>
+                      <text class="pictrue_log_medium pictrue_log_class" wx:if="{{productItem.activity && productItem.activity.type === '3'}}">拼团</text>
+              </view>
+              <view class="text">
+                <view class="name line1">{{ productItem.store_name }}</view>
+                <view class="money font-color">
+                  ¥<span class="num">{{ productItem.price }}</span>
+                </view>
+                <view class="acea-row row-between-wrapper">
+                  <view class="vipMoney" wx:if="{{productItem.vip_price && productItem.vip_price > 0}}">
+                    ￥{{ productItem.vip_price }}
+                    <image src="/images/vip.png"></image>
+                  </view>
+                  <view class="sales">已售{{ productItem.sales }}件</view>
+                </view>
+              </view>
+            </view>
+              <view class='loadingicon acea-row row-center-wrapper'>
+        <text class='loading iconfont icon-jiazai' hidden='{{loading==false}}'></text>
+        {{loadTitle}}
+     </view>
+          </view>
+          <view class='noCommodity' wx:if="{{productList.length==0 && where.page > 1}}">
+   <view class='pictrue'><image src='/images/noShopper.png'></image></view>
+   <recommend host_product="{{hostProduct}}"></recommend>
+</view>
+        </view>
+      </Tab>
+    </Tabs>
+</view>
+<coupon-window window='{{window}}' couponList="{{couponList}}" bind:onColse="onColse"></coupon-window>
+<authorize bind:onLoadFun='onLoadFun' isGoIndex='{{isGoIndex}}' iShidden="{{iShidden}}" isAuto="{{isAuto}}"></authorize>

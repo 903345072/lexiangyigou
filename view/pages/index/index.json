@@ -1,0 +1,14 @@
+{
+  "usingComponents": {
+    "navbar": "/components/navbar/index",
+    "goodList": "/components/goodList/index",
+    "promotionGood": "/components/promotionGood/index",
+    "coupon-window": "/components/coupon-window/index",
+    "authorize": "/components/authorize/authorize",
+    "home": "/components/home/index",
+    "Tab": "vant-weapp/tab/index",
+    "Tabs": "vant-weapp/tabs/index",
+    "recommend": "/components/recommend/index"
+  },
+  "navigationBarTextStyle": "white"
+}

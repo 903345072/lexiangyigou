@@ -1,0 +1,79 @@
+<navbar parameter='{{parameter}}'></navbar>
+<iview class="order-index" ref="container">
+    <iview class="header acea-row">
+      <navigator class="item acea-row row-column" url='/pages/admin/order_list/index?orderStatus=0' hover-class='none'>
+        <iview class="num">{{census.unpaid_count}}</iview>
+        <iview>待付款</iview>
+      </navigator>
+      <navigator class="item acea-row row-column" url='/pages/admin/order_list/index?orderStatus=1' hover-class='none'>
+        <iview class="num">{{ census.unshipped_count }}</iview>
+        <iview>待发货</iview>
+      </navigator> 
+      <navigator class="item acea-row row-column" url='/pages/admin/order_list/index?orderStatus=2' hover-class='none'>
+        <iview class="num">{{ census.received_count }}</iview>
+        <iview>待收货</iview>
+      </navigator>
+      <navigator class="item acea-row row-column" url='/pages/admin/order_list/index?orderStatus=3' hover-class='none'>
+        <iview class="num">{{ census.evaluated_count }}</iview>
+        <iview>待评价</iview>
+      </navigator>
+      <navigator class="item acea-row row-column" url='/pages/admin/order_list/index?orderStatus=-3' hover-class='none'>
+        <iview class="num">{{ census.refund_count }}</iview>
+        <iview>退款</iview>
+      </navigator>
+    </iview>
+    <iview class="wrapperBox">
+      <view class="wrapper">
+        <iview class="title">
+          <span class="iconfont icon-shujutongji"></span>数据统计
+        </iview>
+        <iview class="list acea-row">
+          <navigator class="item acea-row row-column" url='/pages/admin/order_statistics/index?type=1&time=today' hover-class='none'>
+            <iview class="num">{{ census.todayPrice }}</iview>
+            <iview class="titles">今日成交额</iview>
+          </navigator>
+          <navigator class="item acea-row row-column" url='/pages/admin/order_statistics/index?type=1&time=yesterday' hover-class='none'>
+            <iview class="num">{{ census.proPrice }}</iview>
+            <iview class="titles">昨日成交额</iview>
+          </navigator>
+          <navigator class="item acea-row row-column" url='/pages/admin/order_statistics/index?type=1&time=month' hover-class='none'>
+            <iview class="num">{{ census.monthPrice }}</iview>
+            <iview class="titles">本月成交额</iview>
+          </navigator>
+          <navigator class="item acea-row row-column" url='/pages/admin/order_statistics/index?type=2&time=today' hover-class='none'>
+            <iview class="num">{{ census.todayCount }}</iview>
+            <iview class="titles">今日订单数</iview>
+          </navigator>
+          <navigator class="item acea-row row-column" url='/pages/admin/order_statistics/index?type=2&time=yesterday' hover-class='none'>
+            <iview class="num">{{ census.proCount }}</iview>
+            <iview class="titles">昨日订单数</iview>
+          </navigator>
+          <navigator class="item acea-row row-column" url='/pages/admin/order_statistics/index?type=2&time=month' hover-class='none'>
+            <iview class="num">{{ census.monthCount }}</iview>
+            <iview class="titles">本月订单数</iview>
+          </navigator>
+        </iview>
+      </view>
+      <iview class="wrapper public-wrapper">
+        <iview class="title">
+          <span class="iconfont icon-shujutongji"></span>详细数据
+        </iview>
+        <iview class="nav acea-row row-between-wrapper">
+          <iview class="data">日期</iview>
+          <iview class="browse">订单数</iview>
+          <iview class="turnover">成交额</iview>
+        </iview>
+        <iview class="conter">
+          <iview class="item acea-row row-between-wrapper" wx:for="{{dataList}}"  wx:key='index'>
+            <iview class="data">{{ item.time }}</iview>
+            <iview class="browse">{{ item.count }}</iview>
+            <iview class="turnover">{{ item.price }}</iview>
+          </iview>
+        </iview>
+        <view class='loadingicon acea-row row-center-wrapper' wx:if="{{loading}}">
+            <text class='loading iconfont icon-jiazai' hidden='{{loading==false}}'></text>{{loadTitle}}
+        </view>
+      </iview>
+    </iview>
+  </iview>
+  <authorize bind:onLoadFun='onLoadFun'></authorize>

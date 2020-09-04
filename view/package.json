@@ -1,0 +1,16 @@
+{
+  "name": "makeup",
+  "version": "1.0.0",
+  "description": "this is a project file",
+  "main": "app.js",
+  "scripts": {
+    "serve": "npm dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/BieAi/cremb_xcx_v3.0.git"
+  },
+  "author": "mmj",
+  "license": "ISC",
+  "dependencies": {}
+}
