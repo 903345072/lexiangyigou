@@ -69,12 +69,23 @@
                             </div>
                         </div>
 
+                        <?php if($admin_info['power'] >= 9999): ?>
                         <div class="layui-inline">
                             <label class="layui-form-label">运营中心Id：</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="operation_id" lay-verify="nickname" style="width: 100%" autocomplete="off" placeholder="请输入运营中心Id" class="layui-input">
                             </div>
                         </div>
+                        <?php endif;?>
+
+                        <?php if($admin_info['power'] > 9997): ?>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">经纪人id：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="manager_id" lay-verify="nickname" style="width: 100%" autocomplete="off" placeholder="请输入经纪人id" class="layui-input">
+                            </div>
+                        </div>
+                        <?php endif;?>
 
                         <div class="layui-inline">
                             <label class="layui-form-label">状　　态：</label>
@@ -137,8 +148,9 @@
                         <input type='checkbox' name='status' lay-skin='switch' value="{{d.uid}}" lay-filter='status' lay-text='正常|禁止'  {{ d.status == 1 ? 'checked' : '' }}>
                     </script>
                     <script type="text/html" id="barDemo">
+                        <?php if($admin_info['power'] >= 9999): ?>
                         <button type="button" class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button>
-                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
+                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button><?php endif;?>
                         <ul class="layui-nav-child layui-anim layui-anim-upbit">
                             <li>
                                 <a href="javascript:void(0);" lay-event="money">

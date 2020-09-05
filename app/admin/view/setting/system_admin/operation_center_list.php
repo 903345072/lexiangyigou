@@ -37,6 +37,7 @@
                         <thead>
                         <tr>
 
+                            <th class="text-center">id</th>
                             <th class="text-center">姓名</th>
                             <th class="text-center">账号</th>
                             <th class="text-center">最后一次登陆时间</th>
@@ -48,6 +49,9 @@
                         <tbody class="">
                         {volist name="list" id="vo"}
                         <tr>
+                            <td class="text-center">
+                                {$vo.id}
+                            </td>
                             <td class="text-center">
                                 {$vo.real_name}
                             </td>

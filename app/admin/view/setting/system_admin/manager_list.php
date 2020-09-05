@@ -37,18 +37,22 @@
                         <thead>
                         <tr>
 
+                            <th class="text-center">id</th>
                             <th class="text-center">姓名</th>
                             <th class="text-center">账号</th>
                             <th class="text-center">最后一次登陆时间</th>
                             <th class="text-center">最后一次登陆ip</th>
                             <th class="text-center">邀请码</th>
-                            <th class="text-center">开启</th>
+
                             <th class="text-center">操作</th>
                         </tr>
                         </thead>
                         <tbody class="">
                         {volist name="list" id="vo"}
                         <tr>
+                            <td class="text-center">
+                                {$vo.id}
+                            </td>
                             <td class="text-center">
                                 {$vo.real_name}
                             </td>
@@ -65,9 +69,7 @@
                             <td class="text-center">
                                 {$vo.invite_code}
                             </td>
-                            <td class="text-center">
-                                <i class="fa {eq name='vo.status' value='1'}fa-check text-navy{else/}fa-close text-danger{/eq}"></i>
-                            </td>
+
 
                             <td class="text-center">
                                 <button class="btn btn-danger btn-xs" data-url="{:Url('delete',array('id'=>$vo['id']))}" type="button"><i class="fa fa-times"></i> 删除

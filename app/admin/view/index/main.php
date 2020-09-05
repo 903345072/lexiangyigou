@@ -100,9 +100,11 @@
             </div>
         </div>
     </div>
+    <?php if($admin_info['power'] == 9997): ?>
     <div>
         <span style="font-size: 20px;color: red">我的推广链接:<?= $ewm_url ?></span>
     </div>
+    <?php endif;?>
 </div>
 {/block}
 {block name="script"}

@@ -134,6 +134,7 @@ class Index extends AuthController
 
 
         $this->assign([
+            'admin_info' => $adminInfo,
             'first_line' => $first_line,
             'second_line' => $second_line,
             'topData' => $topData,
