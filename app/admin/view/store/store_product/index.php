@@ -1,25 +1,7 @@
 {extend name="public/container"}
 {block name="content"}
 <div class="layui-fluid" style="background: #fff;margin-top: -10px;">
-    <div class="layui-tab layui-tab-brief" lay-filter="tab">
-        <ul class="layui-tab-title">
-            <li lay-id="list" {eq name='type' value='1'}class="layui-this" {/eq} >
-                <a href="{eq name='type' value='1'}javascript:;{else}{:Url('index',['type'=>1])}{/eq}">出售中商品({$onsale})</a>
-            </li>
-            <li lay-id="list" {eq name='type' value='2'}class="layui-this" {/eq}>
-                <a href="{eq name='type' value='2'}javascript:;{else}{:Url('index',['type'=>2])}{/eq}">仓库中商品({$forsale})</a>
-            </li>
-            <li lay-id="list" {eq name='type' value='4'}class="layui-this" {/eq}>
-                <a href="{eq name='type' value='4'}javascript:;{else}{:Url('index',['type'=>4])}{/eq}">已经售馨商品({$outofstock})</a>
-            </li>
-            <li lay-id="list" {eq name='type' value='5'}class="layui-this" {/eq}>
-                <a href="{eq name='type' value='5'}javascript:;{else}{:Url('index',['type'=>5])}{/eq}">警戒库存({$policeforce})</a>
-            </li>
-            <li lay-id="list" {eq name='type' value='6'}class="layui-this" {/eq}>
-                <a href="{eq name='type' value='6'}javascript:;{else}{:Url('index',['type'=>6])}{/eq}">商品回收站({$recycle})</a>
-            </li>
-        </ul>
-    </div>
+
     <div class="layui-row layui-col-space15"  id="app">
         <div class="layui-col-md12">
             <div class="layui-card">
