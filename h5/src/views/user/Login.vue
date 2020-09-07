@@ -173,6 +173,12 @@
           </div>
         </div>
       </div>
+      <div style="margin-top: 0.1rem">
+        <label>
+          <input type="checkbox" style="border: solid 1px #1673ff;height: 0.5rem;width: 0.5rem;-webkit-appearance:button" v-bind:checked="is_agree" v-on:click="handleDisabled" />
+          我仔细阅读并同意网站<router-link style="color:blue" :to="{path:'/agreement'}">用户注册协议</router-link>
+        </label>
+      </div>
       <div class="logon" @click="register">注册</div>
       <div class="tip">
         已有账号?
@@ -191,7 +197,7 @@ import {
   register,
   getCodeApi
 } from "@api/user";
-import attrs, { required, alpha_num, chs_phone } from "@utils/validate";
+import attrs, { required, alpha_num, chs_phone,is_agreed } from "@utils/validate";
 import { validatorDefaultCatch } from "@utils/dialog";
 import { getLogo } from "@api/public";
 import cookie from "@utils/store/cookie";
@@ -215,18 +221,34 @@ export default {
       codeUrl: "",
       codeVal: "",
       invite_code: "",
-      isShowCode: false
+      isShowCode: false,
+      is_agree:false
     };
   },
   mounted: function() {
     this.getCode();
     this.getLogoImage();
     this.invite_code = this.getQueryVariable('code')?this.getQueryVariable('code'):'';
+
     if (this.getQueryVariable('code')){
+      this.formItem = 0;
+    }
+    if (this.getQueryVariable('item')){
       this.formItem = 0;
     }
   },
   methods: {
+
+    handleDisabled:function(){
+      this.is_agree = !this.is_agree;
+      if(this.is_agree===true){
+        this.is_agree =  true;
+      }
+      else{
+        this.is_agree =  false;
+      }
+      console.log(this.is_agree)
+    },
    getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split("&");
@@ -305,7 +327,11 @@ export default {
     },
     async register() {
       var that = this;
-      const { account, captcha, password,invite_code } = that;
+      const { account, captcha, password,invite_code} = that;
+      if (!this.is_agree){
+        that.$dialog.error("请同意用户注册协议")
+        return;
+      }
       try {
         await that
           .$validator({
@@ -314,7 +340,6 @@ export default {
               required(required.message("手机号码")),
               chs_phone(chs_phone.message())
             ],
-
             captcha: [
               required(required.message("验证码")),
               alpha_num(alpha_num.message("验证码"))
@@ -325,7 +350,7 @@ export default {
               alpha_num(alpha_num.message("密码"))
             ]
           })
-          .validate({ account, captcha, password });
+          .validate({ account, captcha, password});
       } catch (e) {
         return validatorDefaultCatch(e);
       }

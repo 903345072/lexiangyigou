@@ -426,8 +426,8 @@ class AuthController
 
     public function getReward($total=10000)
     {
-        $win1 = floor((70*$total)/100);
-        $win2 = floor((30*$total)/100);
+        $win1 = floor((60*$total)/100);
+        $win2 = floor((40*$total)/100);
 
 
         $return = array();

@@ -13,6 +13,17 @@ export function required(message, opt = {}) {
 
 bindMessage(required, "请输入%s");
 
+export function is_agreed(message, opt = {}) {
+  return {
+    required: true,
+    message,
+    type: "int",
+    ...opt
+  };
+}
+
+bindMessage(is_agreed, "请同意用户注册协议");
+
 export function url(message, opt = {}) {
   return {
     type: "url",

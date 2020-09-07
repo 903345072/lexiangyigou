@@ -147,6 +147,15 @@
                     <script type="text/html" id="checkboxstatus">
                         <input type='checkbox' name='status' lay-skin='switch' value="{{d.uid}}" lay-filter='status' lay-text='正常|禁止'  {{ d.status == 1 ? 'checked' : '' }}>
                     </script>
+
+                    <script type="text/html" id="is_normal">
+                        <?php if("{{d.status}}" == 0):  ?>
+                        禁止
+                        <?php else:?>
+                        正常
+                        <?php endif;?>
+
+                    </script>
                     <script type="text/html" id="barDemo">
                         <?php if($admin_info['power'] >= 9999): ?>
                         <button type="button" class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button>
@@ -224,8 +233,12 @@
             {field: 'spread_uid_nickname', title: '推荐人',align:'center'},
 
             {field: 'data_time', title: '访问日期',align:'center',width:'12%',templet:'#data_time'},
-            // {field: 'status', title: '状态',templet:"#checkboxstatus",width:'6%',align:'center'},
-
+            <?php if($admin_info['power'] >= 9999):?>
+             {field: 'status', title: '状态',templet:"#checkboxstatus",width:'6%',align:'center'},
+            <?php endif;?>
+            <?php if($admin_info['power'] < 9999):?>
+            {field: 'status', title: '状态',templet:"#is_normal",width:'6%',align:'center'},
+            <?php endif;?>
             {field: 'operate', title: '操作', width: '10%', align: 'center', toolbar: '#barDemo'}
         ];
     });

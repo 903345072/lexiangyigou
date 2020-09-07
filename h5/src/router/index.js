@@ -111,14 +111,24 @@ const router = new Router({
       component: () => import("@views/shop/EvaluateList.vue")
     },
     {
-      path: "/goods_evaluate/:id",
-      name: "GoodsEvaluate",
+      path: "/evaluate_list/:id",
+      name: "EvaluateList",
       meta: {
-        title: "商品评价",
+        title: "商品评分",
         keepAlive: true,
         auth: true
       },
-      component: () => import("@views/shop/GoodsEvaluate.vue")
+      component: () => import("@views/shop/EvaluateList.vue")
+    },
+    {
+      path: "/agreement",
+      name: "agreement",
+      meta: {
+        title: "协议",
+        keepAlive: true,
+        auth: false
+      },
+      component: () => import("@views/agreement.vue")
     },
     {
       path: "/promotion",
