@@ -270,6 +270,8 @@ class StoreProduct extends AuthController
             ['video_link', ''],
             ['items', []],
             ['attrs', []],
+            ['tuan_number', 0],
+            ['back_rate', 0],
             ['activity', []]
         ]);
         foreach ($data['activity'] as $k => $v) {
@@ -344,7 +346,9 @@ class StoreProduct extends AuthController
         } else {
             $data['add_time'] = time();
             $data['code_path'] = '';
+            print_r($data);die;
             $res = ProductModel::create($data);
+
             $description = $data['description'];
             StoreDescription::saveDescription($description, $res['id']);
             $cateData = [];
