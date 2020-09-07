@@ -7,4 +7,5 @@ runtime/
 install.lock
 public/uploads
 public/nginx.htaccess
+public/index.html
 public/live-logo.gif
