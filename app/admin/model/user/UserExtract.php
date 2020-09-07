@@ -86,12 +86,13 @@ class UserExtract extends BaseModel
         $fail_time = time();
         $data = self::get($id);
         $extract_number = $data['extract_price'];
-        $mark = '提现失败,退回佣金' . $extract_number . '元';
+
+        $mark = '提现失败,退回金额' . $extract_number . '元';
         $uid = $data['uid'];
         $status = -1;
         $User = User::where('uid', $uid)->find()->toArray();
         UserBill::income('提现失败', $uid, 'now_money', 'extract', $extract_number, $id, bcadd($User['now_money'], $extract_number, 2), $mark);
-        User::bcInc($uid, 'brokerage_price', $extract_number, 'uid');
+        User::bcInc($uid, 'now_money', $extract_number, 'uid');
         $extract_type = '未知方式';
         switch ($data['extract_type']) {
             case 'alipay':

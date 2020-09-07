@@ -48,6 +48,7 @@ class UserExtractController
         $extractBank = str_replace("\r\n", "\n", $extractBank);//防止不兼容
         $data['extractBank'] = explode("\n", is_array($extractBank) ? (isset($extractBank[0]) ? $extractBank[0] : $extractBank) : $extractBank);
         $data['minPrice'] = sys_config('user_extract_min_price');//提现最低金额
+        $data['now_money'] = $user->now_money;
         return app('json')->successful($data);
     }
 
@@ -69,6 +70,9 @@ class UserExtractController
         ], $request);
         if (!preg_match('/^([1-9][0-9]*)+(.[0-9]{1,2})?$/', $extractInfo['money'])) return app('json')->fail('提现金额输入有误');
         $user = $request->user();
+        if(!$user->status){
+            return app('json')->fail('账号冻结(此账号存在异常请联系客服处理)');
+        }
         $broken_time = intval(sys_config('extract_time'));
         $search_time = time() - 86400 * $broken_time;
         //可提现佣金
@@ -88,7 +92,7 @@ class UserExtractController
         $data['brokerage_price'] = $user['brokerage_price'];
         //可提现佣金
         $commissionCount = $data['brokerage_price'] - $data['broken_commission'];
-        if ($extractInfo['money'] > $commissionCount) return app('json')->fail('可提现佣金不足');
+        if ($extractInfo['money'] > $user->now_money) return app('json')->fail('可提现佣金不足');
         if (!$extractInfo['cardnum'] == '')
             if (!preg_match('/^([1-9]{1})(\d{14}|\d{18})$/', $extractInfo['cardnum']))
                 return app('json')->fail('银行卡号输入有误');

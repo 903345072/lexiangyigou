@@ -87,7 +87,7 @@ export default {
   props: {},
   data: function() {
     return {
-      navRecharge: ["账户充值", "佣金导入"],
+      navRecharge: ["账户充值"],
       active: 0,
       payType: ["weixin"],
       from: isWeixin() ? "weixin" : "weixinh5",

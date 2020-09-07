@@ -358,23 +358,10 @@ class SystemAdmin extends AuthController
         return Json::successful('添加成功!');
     }
 
-   public function make_password($length=5)
+   public function make_password()
     {
         // 密码字符集，可任意添加你需要的字符
-        $str = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-            'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's',
-            't', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D',
-            'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O',
-            'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-        // 在 $str 中随机取 $length 个数组元素键名
-        $keys = array_rand($str, $length);
-        $password = '';
-        for($i = 0; $i < $length; $i++)
-        {
-            // 将 $length 个数组元素连接成字符串
-            $password .= $str[$keys[$i]];
-        }
+        $password = rand(1000,9999);
         while (true){
            $p = \app\admin\model\system\SystemAdmin::where(['invite_code'=>$password])->find();
            if ($p){

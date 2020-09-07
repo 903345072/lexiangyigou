@@ -61,10 +61,10 @@ class UserExtract extends BaseModel
             return self::setErrorInfo('提现方式不存在');
         $userInfo = User::get($userInfo['uid']);
         $extractPrice = $userInfo['brokerage_price'];
-        if($extractPrice < 0) return self::setErrorInfo('提现佣金不足'.$data['money']);
-        if($data['money'] > $extractPrice) return self::setErrorInfo('提现佣金不足'.$data['money']);
-        if($data['money'] <= 0) return self::setErrorInfo('提现佣金大于0');
-        $balance = bcsub($userInfo['brokerage_price'],$data['money'],2);
+
+
+        $balance = $data['money'];
+
         if($balance < 0) $balance=0;
         $insertData = [
             'uid' => $userInfo['uid'],
@@ -94,20 +94,18 @@ class UserExtract extends BaseModel
             if(!$data['weixin']) return self::setErrorInfo('请输入微信账号');
             $mark = '使用微信提现'.$insertData['extract_price'].'元';
         }
+
         self::beginTrans();
         try{
+
             $res1 = self::create($insertData);
             if(!$res1) return self::setErrorInfo('提现失败');
-            $res2 = User::edit(['brokerage_price'=>$balance],$userInfo['uid'],'uid');
+            $res2 = User::bcDec($userInfo['uid'],"now_money",$balance,'uid');
+
             $res3 = UserBill::expend('余额提现',$userInfo['uid'],'now_money','extract',$data['money'],$res1['id'],$balance,$mark);
             $res = $res2 && $res3;
             if($res){
                 self::commitTrans();
-                try{
-                    ChannelService::instance()->send('WITHDRAW', ['id'=>$res1->id]);
-                }catch (\Exception $e){}
-                event('AdminNewPush');
-                //发送模板消息
                 return true;
             }else return self::setErrorInfo('提现失败!');
         }catch (\Exception $e){

@@ -48,8 +48,7 @@ class AuthController
         } else {
             return app('json')->fail('账号或密码错误');
         }
-        if (!$user['status'])
-            return app('json')->fail('已被禁止，请联系管理员');
+
 
 
         // 设置推广关系

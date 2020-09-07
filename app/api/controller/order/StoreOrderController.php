@@ -58,6 +58,10 @@ class StoreOrderController
         $cartInfo = $cartGroup['valid'];
         $addr = UserAddress::where('uid', $uid)->where('is_default', 1)->find();
         $priceGroup = StoreOrder::getOrderPriceGroup($cartInfo, $addr);
+        $user = $request->user();
+        if (!$user->status){
+            return app('json')->fail('账号冻结(此账号存在异常请联系客服处理)');
+        }
         if ($priceGroup === false) {
             return app('json')->fail(StoreOrder::getErrorInfo('运费模板不存在'));
         }
@@ -87,7 +91,7 @@ class StoreOrderController
         $data['orderKey'] = StoreOrder::cacheOrderInfo($uid, $cartInfo, $priceGroup, $other);
         $data['offlinePostage'] = $other['offlinePostage'];
         $vipId = UserLevel::getUserLevel($uid);
-        $user = $request->user();
+
         if (isset($user['pwd'])) unset($user['pwd']);
         $user['vip'] = $vipId !== false ? true : false;
         if ($user['vip']) {

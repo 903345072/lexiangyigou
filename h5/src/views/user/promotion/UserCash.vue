@@ -153,7 +153,7 @@ export default {
         res => {
           that.banks = res.data.extractBank;
           that.minPrice = res.data.minPrice;
-          that.commissionCount = res.data.commissionCount;
+          that.commissionCount = res.data.now_money;
         },
         function(err) {
           that.$dialog.message(err.msg);

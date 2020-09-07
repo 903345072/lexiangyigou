@@ -456,8 +456,9 @@ export default {
           this.store_self_mention = res.data.store_self_mention;
           this.computedPrice();
         })
-        .catch(() => {
-          this.$dialog.error("加载订单数据失败");
+        .catch((res) => {
+          this.$dialog.error(res.data.msg);
+          return this.$router.go(-1);
         });
     },
     addressTap: function() {

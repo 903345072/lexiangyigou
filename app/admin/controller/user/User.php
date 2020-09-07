@@ -796,4 +796,55 @@ class User extends AuthController
     {
         return Json::successful(UserBillAdmin::getOneBalanceChangList(compact('uid', 'page', 'limit')));
     }
+
+
+    //添加账号
+    public function createMember()
+    {
+        $admin = $this->adminInfo;
+        $f = array();
+        $f[] = Form::input('account', '账号');
+        $f[] = Form::input('real_name', '真名');
+        $f[] = Form::input('nickname', '昵称');
+        $f[] = Form::input('now_money', '账户余额');
+        $f[] = Form::input('pid', '经纪人id');
+        $f[] = Form::input('pwd', '密码')->type('password');
+        $form = Form::make_post_form('创建', $f, Url::buildUrl('saveMember'));
+        $this->assign(compact('form'));
+        return $this->fetch('public/form-builder');
+    }
+
+
+    /**
+     * 创建一个新的运营中心
+     *
+     * @param \think\Request $request
+     * @return \think\Response
+     */
+    public function saveMember()
+    {
+        $data = Util::postMore([
+            'account',
+            'pwd',
+            'real_name',
+            'nick_name',
+            'now_money',
+            'pid',
+            ['status', 1]
+        ]);
+
+        if (!$data['account']) return Json::fail('请输入账号');
+        if (!$data['pwd']) return Json::fail('请输入密码');
+        if (!$data['real_name']) return Json::fail('请输入真名');
+        if (!$data['pid']) return Json::fail('请输入经纪人id');
+        if (!$data['nick_name']){
+            $data['nick_name'] = $data['real_name'];
+        }
+        if (\app\models\user\User::be($data['account'], 'account')) return Json::fail('账号已存在');
+        $data['pwd'] = md5($data['pwd']);
+        $data['add_time'] = time();
+
+        if (!\app\models\user\User::create($data)) return Json::fail('添加失败');
+        return Json::successful('添加成功!');
+    }
 }
