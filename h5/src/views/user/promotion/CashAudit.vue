@@ -5,7 +5,7 @@
     <div class="time">{{ time }}</div>
     <div
       class="bnt bg-color-red"
-      @click="$router.push({ path: '/user/user_promotion' })"
+      @click="$router.push({ path: '/user' })"
     >
       好的
     </div>
