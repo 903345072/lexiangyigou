@@ -14,6 +14,7 @@ use app\models\system\SystemStore;
 use app\models\system\SystemStoreStaff;
 use app\models\user\User;
 use app\models\user\UserBill;
+use app\models\user\UserRecharge;
 use app\models\user\WechatUser;
 use app\Request;
 use crmeb\services\CacheService;
@@ -319,6 +320,20 @@ class PublicController
             $query->name('store_pink')->where(['status' => 2, 'is_refund' => 0])->field(['uid'])->select();
         })->limit(3)->order('uid desc')->column('avatar');
         return app('json')->successful($data);
+    }
+
+    //获取奖品
+    public function getAward(){
+        $award = [
+            ['name'=>"抱枕","color"=>"#f9e3bb","img"=>"http://baiyouyigou.027leq.com/attachment/images/1/2020/05/itcGT8h3gtACCBgC4CBZccbTqj9cLb.png"],
+            ['name'=>"雨伞","color"=>"#f8d384","img"=>"http://baiyouyigou.027leq.com/attachment/images/1/2020/05/aB7OOs76Y7UsoZ2fZJZShZ7WzU6O7W.png"],
+            ['name'=>"水杯","color"=>"#f9e3bb","img"=>"http://baiyouyigou.027leq.com/attachment/images/1/2020/05/m99wk3WWeGKyfBYCKvyw3VbdVwDyvP.png"],
+            ['name'=>"谢谢惠顾","color"=>"#a8a8a8"],
+            ['name'=>"充电线","color"=>"#f9e3bb","img"=>"http://baiyouyigou.027leq.com/attachment/images/1/2020/05/NOk5vV5gqOZsXEEOpQOQp8BGqk5bOK.png"],
+            ['name'=>"驱蚊器","color"=>"#f8d384","img"=>"http://baiyouyigou.027leq.com/attachment/images/1/2020/05/fLK6QlJjl1qk0uqEUyJ1Ulqf5V6fbY.png"],
+            ['name'=>"耳机","color"=>"#f9e3bb","img"=>"http://baiyouyigou.027leq.com/attachment/images/1/2020/05/gzVh3N9ugW3p50Ll13L0LDUnG7nhH7.png"],
+            ['name'=>"谢谢惠顾","color"=>"#a8a8a8"]];
+        return app('json')->successful(['awards'=>$award]);
     }
 
 }

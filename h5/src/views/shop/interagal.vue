@@ -16,12 +16,31 @@
         <div class="mask" @click="closeFollowCode"></div>
       </div>
 
-      <img  src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_left1_arrow.png" onclick="javascript:history.go(-1)" style="width: .5rem;height:.5rem; margin-left:0.3rem;margin-top:0.2rem">
-      <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/jifenbanner.png" class="banner1">
+      <img  src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_left1_arrow.png" onclick="javascript:history.go(-1)" style="width: .5rem;height:.5rem; margin-left:0.3rem;margin-top:0.2rem">
+      <img src="../../assets/images/integral_banner.jpg" class="banner1">
       <div class="sign">
         <div class="jifen">我的积分 <span></span></div>
         <div class="signjf"><router-link :to="{path:'/user/sign'}">点击进入签到</router-link></div>
       </div>
+        <div>
+            <div  style="display: flex;justify-content: center">
+                <LuckDraw
+                        ref="luckDraw"
+                        v-model="currIndex"
+                        :awards="awards"
+                        :async="true"
+                        @before-start="handleBeforeStart"
+                        @start="handleStart"
+                        @end="handleEnd"
+                        :radius=150
+
+                        :borderColor="borderColor_"
+                />
+            </div>
+        </div>
+        <div style="display: flex;justify-content: center;margin-top:10px">
+            <span style="color: red">*</span>每参与一次消耗150积分
+        </div>
         <div class="wrapper">
 
 <!--积分版块-->
@@ -102,7 +121,7 @@ import { openShareAll, wxShowLocation } from "@libs/wechat";
 import { isWeixin } from "@utils/index";
 import { getHomeData, getShare, follow } from "@api/public";
 import { getHostProducts, getCategory, getProducts } from "@api/store";
-import { getCoupon, getCouponReceive } from "@api/user";
+import { getCoupon, getCouponReceive,getAward,draw } from "@api/user";
 import { getSeckillConfig, getSeckillList } from "@api/activity";
 import Loading from "@components/Loading";
 import debounce from "lodash.debounce";
@@ -127,6 +146,10 @@ export default {
   data: function() {
     let that = this;
     return {
+        is_playing:false,
+        borderColor_:'#8a98ff',
+        currIndex: 0, // 奖品的索引
+        awards: [],
       r_is_sitile:true,
       j_is_sitile:false,
       isWeixin: isWeixin(),
@@ -305,6 +328,7 @@ export default {
     }
   },
   mounted: function() {
+      this.getAward_();
     this.getFollow();
     this.getHomeData();
     this.getCoupon();
@@ -317,6 +341,64 @@ export default {
     cookie.get("expires");
   },
   methods: {
+
+      getAward_(){
+          let that = this
+          getAward()
+              .then(function(res) {
+                  that.awards = res.data.awards
+              })
+              .catch(function(res) {
+
+              });
+      },
+
+      handleStart () {
+
+          console.log('开始抽奖')
+      },
+      handleEnd (index) {
+          this.is_playing = false;
+          var that = this
+          if(this.awards[this.currIndex].img){
+              that.$layer.confirm('<div style="display: flex;justify-content:center;align-items:center;flex-direction: column">\n' +
+                  '    <div style="white-space: nowrap;font-size: 15px;margin-bottom: 10px">恭喜你抽中了<span style="color:red">'+this.awards[this.currIndex].name+'</span>,请截图联系客服兑换奖品</div>\n' +
+                  '    <img style="width: 120px;height: 100px" src='+this.awards[this.currIndex].img+' alt="">\n' +
+                  '</div>', {
+                  btn: ['确定','取消']     //按钮
+              }, function(){           //点击确定访问后台
+                  that.$layer.closeAll();
+              }, function(){   	//点击取消则中断操作
+                  that.$layer.closeAll();
+              })
+          }else {
+              that.$layer.confirm('谢谢惠顾', {
+                  btn: ['确定','取消']     //按钮
+              }, function(){           //点击确定访问后台
+                  that.$layer.closeAll();
+              }, function(){   	//点击取消则中断操作
+                  that.$layer.closeAll();
+              })
+          }
+
+          //alert('恭喜您抽到大奖, 奖品为' + this.awards[this.currIndex].name)
+      },
+      handleBeforeStart () { // 新增异步抽奖
+          let that = this
+          if (!that.is_playing){
+
+              draw()
+                  .then(function(res) {
+                      that.is_playing = true
+                      that.$refs.luckDraw.play(res.data.index)
+                  })
+                  .catch(function(res) {
+                      that.$dialog.toast({ mes: res.data.data.msg });
+                  });
+          }
+
+
+      },
     set_r_sititle(){
       this.r_is_sitile = true
       this.j_is_sitile = false
@@ -1461,5 +1543,31 @@ a, a:link, a:visited, a:hover, a:active {
 
 }
 
-
+.bannera {
+    display: block;
+    width: 79%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+.bannera .turnplate {
+    display: block;
+    width: 100%;
+    position: relative;
+}
+.turnplate {
+    background: url("http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/turnplate-bg.png");
+    background-size: auto;
+    background-size: 100% 100%;
+}
+.bannera .turnplate canvas.item {
+    width: 100%;
+}
+.bannera .turnplate img.pointer {
+    position: absolute;
+    width: 31.5%;
+    height: 42.5%;
+    left: 34.1%;
+    top: 23%;
+}
 </style>

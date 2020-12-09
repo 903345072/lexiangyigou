@@ -18,7 +18,7 @@ use app\models\routine\RoutineTemplate;
 use app\admin\model\user\{User, UserBill};
 use app\admin\model\ump\{StoreCouponUser, StorePink};
 use crmeb\services\{PHPExcelService, WechatTemplateService};
-
+use think\facade\Db;
 /**
  * 订单管理Model
  * Class StoreOrder
@@ -86,7 +86,9 @@ class StoreOrder extends BaseModel
                 $_info[$k]['cart_info'] = $cart_info;
                 unset($cart_info);
             }
+           
             $item['_info'] = $_info;
+            $item["tuan_number"] = Db::table("eb_store_product")->where(["id"=>$_info[0]["cart_info"]["product_id"]])->value('tuan_number');
             $item['spread_nickname'] = SystemAdmin::where(['id'=>$item['pid']])->value('real_name');
             $item['add_time'] = $item['add_time'] ? date('Y-m-d H:i:s', $item['add_time']) : '';
             $item['back_integral'] = $item['back_integral'] ?: 0;

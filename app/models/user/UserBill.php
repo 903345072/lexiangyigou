@@ -163,7 +163,7 @@ class UserBill extends BaseModel
             ->field('FROM_UNIXTIME(add_time,"%Y-%m") as time,group_concat(id SEPARATOR ",") ids')->group('time');
         switch ((int)$type) {
             case 0:
-                $model = $model->where('type', 'in', 'recharge,brokerage,pay_money,system_add,brokerage,pay_product_refund,system_sub');
+                $model = $model->where('type', 'in', 'recharge,pay_money,system_add,brokerage,pay_product_refund,system_sub');
                 break;
             case 1:
                 $model = $model->where('type', 'pay_money');

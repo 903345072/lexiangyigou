@@ -245,6 +245,16 @@ export default [
     component: () => import("@views/user/Recharge.vue")
   },
   {
+    path: "/user/pay",
+    name: "Recharge",
+    meta: {
+      title: "银行卡充值",
+      keepAlive: true,
+      auth: true
+    },
+    component: () => import("@views/user/Yhk.vue")
+  },
+  {
     path: "/user/promoter_rank",
     name: "PromoterRank",
     meta: {

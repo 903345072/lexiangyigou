@@ -29,7 +29,7 @@ trait JwtAuthModelTrait
             'aud' => $host,
             'iat' => $time,
             'nbf' => $time,
-            'exp' => strtotime('+ 3hour'),
+            'exp' => strtotime('+ 168hour'),
         ];
         $params['jti'] = compact('id', 'type');
         $token = JWT::encode($params, Config::get('app.app_key', 'default'));

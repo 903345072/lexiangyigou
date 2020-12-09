@@ -1408,7 +1408,7 @@ border-radius:0.3rem;color:#fff;line-height:0.5rem;text-align:center;bottom:0.17
 .productSort .header .input input{font-size:0.26rem;height:100%;width:5.97rem;}
 .productSort .header .input input::placeholder{color:#999;}
 .productSort .aside{padding-top:0.2rem;position:fixed;width:1.8rem;left:0;top:2.8rem;bottom:1rem;background-color:#f7f7f7;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling: touch;overflow-scrolling: touch;}
-.productSort .aside .item{height:0.8rem;width:100%;font-size:0.26rem;color:#424242;margin-bottom: 0.5rem}
+.productSort .aside .item{height:0.8rem;width:100%;font-size:0.26rem;color:#424242;margin-bottom: 0.35rem}
 .productSort .aside .item.on{background-color:#fff;border-left:0.04rem solid #fc64d5;width:100%;text-align:center;color:#fc64d5;font-weight:bold;}
 .productSort .conter{margin-left:1.8rem;padding: 0 0.14rem;margin-top:2.7rem;}
 .productSort .conter .listw{padding-top:0.2rem;}

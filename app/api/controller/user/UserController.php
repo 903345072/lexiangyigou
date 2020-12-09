@@ -595,4 +595,66 @@ class UserController
 
     }
 
+    public function draw(Request $request){
+
+       $uid =  $request->uid();
+        $user = User::where(['uid'=>$uid])->find();
+        if ($user->integral<150){
+            return app('json')->fail(["msg"=>'积分不足']);
+        }
+        User::bcDec($uid,'integral',150,'uid');
+        return app('json')->success(['index'=>$this->getReward()]);
+    }
+
+
+    public function getReward($total=100000)
+    {
+        $win1 = floor((4*$total)/100);
+        $win2 = floor((3*$total)/100);
+        $win3 = floor((3*$total)/100);
+        $win4 = floor((40*$total)/100);
+        $win5 = floor((3*$total)/100);
+        $win6 = floor((3*$total)/100);
+        $win7 = floor((4*$total)/100);
+        $win8 = floor((40*$total)/100);
+
+
+        $return = array();
+        for ($i1=0;$i1<$win1;$i1++)
+        {
+            $return[] = '0';
+        }
+        for ($j1=0;$j1<$win2;$j1++)
+        {
+            $return[] = '1';
+        }
+        for ($j2=0;$j2<$win3;$j2++)
+        {
+            $return[] = '2';
+        }
+        for ($j3=0;$j3<$win4;$j3++)
+        {
+            $return[] = '3';
+        }
+        for ($j4=0;$j4<$win5;$j4++)
+        {
+            $return[] = '4';
+        }
+        for ($j5=0;$j5<$win6;$j5++)
+        {
+            $return[] = '5';
+        }
+        for ($j6=0;$j6<$win7;$j6++)
+        {
+            $return[] = '6';
+        }
+        for ($j7=0;$j7<$win8;$j7++)
+        {
+            $return[] = '7';
+        }
+
+        shuffle($return);
+        return $return[array_rand($return)];
+    }
+
 }

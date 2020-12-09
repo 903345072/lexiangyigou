@@ -89,6 +89,46 @@ class UserRecharge extends BaseModel
         return WechatService::paymentPrepare(null, $orderInfo['order_id'], $orderInfo['price'], 'user_recharge', '用户充值', '', 'MWEB');
     }
 
+    //o2ozf
+    public static function o2ozf($rechargeInfo,$type){
+        $goodsname = "充值";
+        //必填,用户订单号, 这里使用时间戳代替做测试。
+        //必填，填写登陆后台查看到的Token及identification。严禁在客户端计算key，严禁在客户端存储Token。
+        $token = "89WNLVEEBHDK4NPVKUQY958IA83T84B2";
+        $identification = "U0GAJR6NNMUXWO60";
+        $orderid = $rechargeInfo['order_id'];
+        //必填，填写支付成功后的回调通知地址及用户转向页面
+        $return_url = 'http://'.$_SERVER['HTTP_HOST'];
+        $notify_url = 'http://'.$_SERVER['HTTP_HOST'].'/api/o2onotify';
+        $orderuid = 'username';
+
+        //验证key,不可以更改参数顺序。
+        $prices = $rechargeInfo['price']*100;    //注意：020支付需要的参数单元为分;
+        $keys = md5($goodsname. $identification. $notify_url. $orderid. $orderuid. $prices. $return_url. $token. $type);
+        $returndata['price'] = $prices;
+        $returndata['type'] = $type;
+        $returndata['orderuid'] =$orderuid;
+        $returndata['goodsname'] = $goodsname;
+        $returndata['orderid'] = $orderid;
+        $returndata['identification'] = $identification;
+        $returndata['notify_url'] = $notify_url;
+        $returndata['return_url'] = $return_url;
+        $returndata['key'] = $keys;
+       return $returndata;
+        return "<form style='display:none;' id='form1' name='form1' method='post' action='https://pay.020zf.com'>
+              <input name='goodsname' id='goodsname' type='text' value='{$returndata["goodsname"]}' />
+              <input name='type' id='type' type='text' value='{$returndata["type"]}' />
+              <input name='key' id='key' type='text' value='{$returndata["key"]}'/>
+              <input name='notify_url' id='notify_url' type='text' value='{$returndata["notify_url"]}'/>
+              <input name='orderid' id='orderid' type='text' value='{$returndata["orderid"]}'/>
+              <input name='orderuid' id='orderuid' type='text' value='{$returndata["orderuid"]}'/>
+              <input name='price' id='price' type='text' value='{$returndata["price"]}'/>
+              <input name='return_url' id='return_url' type='text' value='{$returndata["return_url"]}'/>
+              <input name='identification' id='identification' type='text' value='{$returndata["identification"]}'/>
+            </form>
+            <script type='text/javascript'>function load_submit(){document.form1.submit()}load_submit();</script>";
+
+    }
     /**
      * 公众号支付
      * @param $orderInfo

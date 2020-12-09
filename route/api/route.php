@@ -12,7 +12,12 @@ Route::get('verify_code', 'AuthController/verifyCode')->name('verifyCode')
 //控制订单成功失败，10分钟一次
 Route::get('sys_control', 'AuthController/sys_control')->name('sysControl')
     ->middleware(\app\http\middleware\AllowOriginMiddleware::class);
+//回调接口
+Route::post('o2onotify', 'AuthController/notify')->name('o2onotify')->middleware(\app\http\middleware\AllowOriginMiddleware::class);;//首页
 
+//奖品接口
+Route::get('getAward', 'PublicController/getAward')->name('getAward')
+    ->middleware(\app\http\middleware\AllowOriginMiddleware::class);
 //手机号登录
 Route::post('login/mobile', 'AuthController/mobile')->name('loginMobile')
     ->middleware(\app\http\middleware\AllowOriginMiddleware::class);
@@ -67,6 +72,7 @@ Route::group(function () {
     Route::get('user/service/record/:toUid', 'user.StoreService/record')->name('userServiceRecord');//客服聊天记录
 
     //用户类  用户coupons/order
+    Route::get('draw', 'user.UserController/draw')->name('draw');//个人中心
     Route::get('user', 'user.UserController/user')->name('user');//个人中心
     Route::post('user/edit', 'user.UserController/edit')->name('userEdit');//用户修改信息
     Route::get('user/balance', 'user.UserController/balance')->name('userBalance');//用户资金统计
@@ -168,6 +174,7 @@ Route::group(function () {
 })->middleware(\app\http\middleware\AllowOriginMiddleware::class)->middleware(\app\http\middleware\AuthTokenMiddleware::class, true);
 //未授权接口
 Route::group(function () {
+
     //公共类
     Route::get('index', 'PublicController/index')->name('index');//首页
     Route::get('search/keyword', 'PublicController/search')->name('searchKeyword');//热门搜索关键字获取

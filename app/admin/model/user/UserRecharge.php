@@ -139,13 +139,16 @@ class UserRecharge extends BaseModel
                     $item['_recharge_type'] = '小程序充值';
                     break;
                 case 'weixin':
-                    $item['_recharge_type'] = '公众号充值';
+                    $item['_recharge_type'] = '微信充值';
+                    break;
+                case 'zhifubao':
+                    $item['_recharge_type'] = '支付宝充值';
                     break;
                 default:
                     $item['_recharge_type'] = '其他充值';
                     break;
             }
-            $item['_pay_time'] = $item['pay_time'] ? date('Y-m-d H:i:s', $item['pay_time']) : '暂无';
+            $item['_pay_time'] = $item['pay_time'] ? date('Y-m-d H:i:s', $item['pay_time']) : date('Y-m-d H:i:s', $item['add_time']);
             $item['_add_time'] = $item['add_time'] ? date('Y-m-d H:i:s', $item['add_time']) : '暂无';
             $item['paid_type'] = $item['paid'] ? '已支付' : '未支付';
         }

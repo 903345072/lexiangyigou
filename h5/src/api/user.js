@@ -356,3 +356,12 @@ export function getRechargeApi() {
 export function getCodeApi() {
   return request.get("verify_code", {}, { login: false });
 }
+export function getAward() {
+  return request.get("getAward", {}, { login: false });
+
+}
+
+export function draw() {
+  return request.get("draw", {}, { login: true });
+
+}

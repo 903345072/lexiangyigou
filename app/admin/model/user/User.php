@@ -200,7 +200,7 @@ class User extends BaseModel
     public static function getUserList($where)
     {
 
-        $model = self::setWherePage(self::setWhere($where), $where, ['u.status', 'u.is_promoter'], ['u.nickname', 'u.uid', 'u.phone']);
+        $model = self::setWherePage(self::setWhere($where), $where, ['u.status', 'u.is_promoter'], ['u.nickname', 'u.uid', 'u.phone','u.account']);
         $list = $model->alias('u')
 
             ->field('u.*')

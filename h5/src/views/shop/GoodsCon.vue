@@ -6,7 +6,7 @@
 
 
 
-    <p class="fix-head" ><img onclick="javascript:history.go(-1)" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" style="float: left;width: .4rem;height:.4rem; margin-left:0.3rem;margin-top:0.15rem;"> <span style="margin-left: -.4rem">拼团详情</span></p>
+    <p class="fix-head" ><img onclick="javascript:history.go(-1)" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" style="float: left;width: .4rem;height:.4rem; margin-left:0.3rem;margin-top:0.15rem;"> <span style="margin-left: -.4rem">拼团详情</span></p>
     <div class="comm-img">
       <img :src=storeInfo.image alt="">
     </div>

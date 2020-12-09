@@ -1,9 +1,9 @@
 <template>
   <div style="background: #ed7a95;" class="quality-recommend">
-    <div ><img onclick="javascript:history.go(-1)" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" style="width: .5rem;height:.5rem; margin-left:0.3rem;margin-top:0.2rem;margin-bottom: 0.2rem"></div>
+    <div ><img onclick="javascript:history.go(-1)" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" style="width: .5rem;height:.5rem; margin-left:0.3rem;margin-top:0.2rem;margin-bottom: 0.2rem"></div>
 
     <div class="banner">
-      <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/xingp.jpg" alt="">
+      <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/xingp.jpg" alt="">
     </div>
 
 
@@ -21,11 +21,11 @@
             </div>
             <div class="tuanbut">
               <div class="tuan" style="width:50%;display: flex; align-items: center;">
-                <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/tuan.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
+                <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/tuan.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
                 <span style="color: #6c6c6c; padding-left: 0.08rem;">{{item.tuan_number}}人团</span>
               </div>
               <div class="spqg" style="display: flex;width:50%; align-items: center;">
-                <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/gou.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
+                <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/gou.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
                 <span style="margin-left:0.05rem; padding-left: 0.08rem;">去开团</span>
               </div>
             </div>

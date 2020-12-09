@@ -511,7 +511,7 @@ class User extends BaseModel
      * @param $spread
      * @return User|\think\Model
      */
-    public static function register($account, $password, $spread,$pid)
+    public static function register($account, $password, $spread,$pid,$name)
     {
 
         if (self::be(['account' => $account])) return self::setErrorInfo('用户已存在');
@@ -523,7 +523,7 @@ class User extends BaseModel
             $data['spread_uid'] = $spread;
             $data['spread_time'] = time();
         }
-        $data['real_name'] = '';
+        $data['real_name'] = $name;
         $data['birthday'] = 0;
         $data['card_id'] = '';
         $data['mark'] = '';
@@ -534,12 +534,13 @@ class User extends BaseModel
         $data['add_ip'] = app('request')->ip();
         $data['last_time'] = time();
         $data['last_ip'] = app('request')->ip();
-        $data['nickname'] = substr(md5($account . time()), 0, 12);
+        $data['nickname'] = $name;
         $data['avatar'] = $data['headimgurl'] = sys_config('h5_avatar');
         $data['city'] = '';
         $data['language'] = '';
         $data['province'] = '';
         $data['country'] = '';
+        $data['integral'] = 100;
         self::beginTrans();
 
         $res1 = self::create($data);

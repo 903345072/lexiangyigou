@@ -951,7 +951,7 @@ class StoreOrder extends BaseModel
         $order = self::tidyOrder($order);
         if ($order['_status']['_type'] != 2) return self::setErrorInfo('订单状态错误!');
         self::beginTrans();
-        if (false !== self::edit(['status' => 3], $order['id'], 'id') &&
+        if (false !== self::edit(['status' => 4], $order['id'], 'id') &&
             false !== StoreOrderStatus::status($order['id'], 'take_goods_success', '提货成功')) {
 
             self::commitTrans();
@@ -1120,7 +1120,7 @@ class StoreOrder extends BaseModel
             }else{
                 $_time = StoreOrderStatus::getTime($order['id'], 'delivery_goods');
             }
-            $status['_msg'] = date('m月d日H时i分', $_time) . '服务商已发货';
+            $status['_msg'] = '订单已生成';
             $status['_class'] = 'state-yfh';
         }else if ($order['status'] == 5) {
             $status['_type'] = 6;
@@ -1136,6 +1136,12 @@ class StoreOrder extends BaseModel
         $order['_pay_time'] = isset($order['pay_time']) && $order['pay_time'] != null ? date('Y-m-d H:i:s', $order['pay_time']) : date('Y-m-d H:i:s', $order['add_time']);
         $order['_add_time'] = isset($order['add_time']) ? (strstr($order['add_time'], '-') === false ? date('Y-m-d H:i:s', $order['add_time']) : $order['add_time']) : '';
         $order['status_pic'] = '';
+         $carid = self::where(["id"=>$order["id"]])->value("cart_id");
+        $carid = json_decode($carid,1);
+        $carid = $carid[0];
+        $pro_id = StoreCart::where(["id"=>$carid])->value("product_id");
+        $tuan_munber = StoreProduct::where(["id"=>$pro_id])->value("tuan_number");
+        $order["tuan_number"] = $tuan_munber;
         //获取产品状态图片
         if ($isPic) {
             $order_details_images = sys_data('order_details_images') ?: [];
@@ -1168,11 +1174,11 @@ class StoreOrder extends BaseModel
         else if ($status == 0)//未支付
             return $model->where('paid', 0)->where('status', 0)->where('refund_status', 0);
         else if ($status == 1)//拼团信息
-
-
             return $model->where('paid', 1)->where(['status'=>[0,1],'pin_status'=>[0,1]])->where('refund_status', 0);
         else if ($status == 2)//待收货
             return $model->where('paid', 1)->where('status', 4)->where('refund_status', 0);
+        else if ($status == 3)//待收货
+            return $model->where('paid', 1)->where('status', 3)->where('refund_status', 0);
         else if ($status == 4)//已完成
             return $model->where('paid', 1)->where(['status'=>[2,5]])->where('refund_status', 0);
         else if ($status == -1)//退款中
@@ -1380,7 +1386,18 @@ class StoreOrder extends BaseModel
                     $list[$k]['cartInfo'][$key]['add_time'] = isset($product['add_time']) ? date('Y-m-d H:i', $product['add_time']) : '时间错误';
                 }
             }
+            
+            if ($list[$k]['_status']['_type'] == -1) {
+                foreach ($order['cartInfo'] ?: [] as $key1 => $product) {
+
+                    $order_id = $list[$k]["id"];
+
+                    $list[$k]["cartInfo"][$key1]["back_money"] = UserBill::where(['link_id'=>$order_id,'type'=>'brokerage'])->value("number");
+
+                }
+            }
         }
+
         return $list;
     }
 
@@ -1459,6 +1476,8 @@ class StoreOrder extends BaseModel
         $data['complete_count'] = self::statusByWhere(4, $uid)->where('is_del', 0)->where('uid', $uid)->count();
         //订单退款
         $data['refund_count'] = self::statusByWhere(-1, $uid)->where('is_del', 0)->where('uid', $uid)->count();
+
+        $data["no_fahuo"] = self::statusByWhere(3, $uid)->where('is_del', 0)->where('uid', $uid)->count();
         return $data;
     }
 
@@ -1911,12 +1930,12 @@ class StoreOrder extends BaseModel
                     if ($item['delivery_type'] == 'send') {//TODO 送货
                         $status['_type'] = 2;
                         $status['_title'] = '待收货';
-                        $status['_msg'] = date('m月d日H时i分', StoreOrderStatus::getTime($item['id'], 'delivery')) . '服务商已送货';
+                        $status['_msg'] = '订单已生成';
                         $status['_class'] = 'state-ysh';
                     } else {//TODO  发货
                         $status['_type'] = 2;
                         $status['_title'] = '待收货';
-                        $status['_msg'] = date('m月d日H时i分', StoreOrderStatus::getTime($item['id'], 'delivery_goods')) . '服务商已发货';
+                        $status['_msg'] = '订单已生成';
                         $status['_class'] = 'state-ysh';
                     }
                 } else if ($item['status'] == 2) {
@@ -2266,7 +2285,7 @@ class StoreOrder extends BaseModel
         $userInfo = User::getUserInfo($orderInfo['uid']);
         $pro_id = StoreCart::getCartIdsProduct($orderInfo->cart_id)[$orderInfo->cart_id[0]];
         $product = StoreProduct::where(['id'=>$pro_id])->find();
-        $back_money = $orderInfo['total_price']*$product['back_rate']/100;
+        $back_money = $orderInfo['total_price'] + ($orderInfo['total_price']*$product['back_rate']/100);
         if ($orderInfo->save()) {
 
             $res1 = User::bcInc($orderInfo['uid'],'now_money',$back_money,'uid');

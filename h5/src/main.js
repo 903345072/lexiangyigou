@@ -18,7 +18,10 @@ import "@assets/css/style.css";
 import { isWeixin, parseQuery } from "@utils";
 import vueLazyLoad from "vue-lazyload";
 import $store from "./store";
+import LuckDraw from 'vue-luck-draw'
 
+import layer from 'vue-layer'
+import 'vue-layer/lib/vue-layer.css';
 Vue.use(vueLazyLoad, {
   preload: 1.3, //加载高度比。
   loading: require("@assets/images/noPictrue.png"), //加载时的过渡图片
@@ -26,6 +29,7 @@ Vue.use(vueLazyLoad, {
   attempt: 1 //每次加载的张数。
 });
 Vue.use(animate);
+Vue.use(LuckDraw);
 Vue.config.productionTip = false;
 Vue.config.devtools = process.env.NODE_ENV !== "production";
 Vue.prototype.$validator = function(rule) {
@@ -33,7 +37,7 @@ Vue.prototype.$validator = function(rule) {
 };
 Vue.prototype.$scroll = $scroll;
 Vue.prototype.$dialog = dialog;
-
+Vue.prototype.$layer = layer(Vue);
 const CACHE_KEY = "clear_0.0.1";
 
 if (!cookie.has(CACHE_KEY)) {

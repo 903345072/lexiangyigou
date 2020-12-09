@@ -19,7 +19,7 @@ use app\admin\model\store\{StoreVisit, StoreCouponUser};
 use app\admin\model\system\{SystemUserLevel, SystemUserTask};
 use crmeb\services\{FormBuilder as Form, UtilService as Util, JsonService as Json};
 use app\admin\model\user\{User as UserModel, UserBill as UserBillAdmin, UserLevel, UserGroup, UserTaskFinish};
-
+use think\facade\Db;
 /**
  * 用户管理控制器
  * Class User
@@ -145,6 +145,7 @@ class User extends AuthController
         if ($data['money_status'] && $data['money']) {//余额增加或者减少
             if ($data['money_status'] == 1) {//增加
                 $edit['now_money'] = bcadd($user['now_money'], $data['money'], 2);
+                Db::table("eb_user_recharge")->insert(["uid"=>$user["uid"],"order_id"=>time().rand(1,99999),"price"=>$data["money"],"recharge_type"=>"sys","paid"=>1,"add_time"=>time()]);
                 $res1 = UserBillAdmin::income('系统增加余额', $user['uid'], 'now_money', 'system_add', $data['money'], $this->adminId, $edit['now_money'], '系统增加了' . floatval($data['money']) . '余额');
                 try {
                     UserRepository::adminAddMoney($user, $data['money']);
@@ -849,5 +850,11 @@ class User extends AuthController
 
         if (!\app\models\user\User::create($data)) return Json::fail('添加失败');
         return Json::successful('添加成功!');
+    }
+
+    public function del_member(){
+        $uid = input('get.uid');
+        \app\models\user\User::where(['uid'=>$uid])->delete();
+        return Json::successful('删除成功!');
     }
 }

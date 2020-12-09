@@ -30,6 +30,9 @@
         <div>拼团信息</div>
         <div class="num">{{ orderData.unshipped_count || 0 }}</div>
       </div>
+
+      
+
       <div
         class="item"
         :class="{ on: type === 2 }"
@@ -38,6 +41,8 @@
         <div>待收货</div>
         <div class="num">{{ orderData.received_count || 0 }}</div>
       </div>
+
+
 
       <div
         class="item"
@@ -123,6 +128,9 @@
             </div>
           </div>
         </div>
+        <div style="float: left;margin-top:13px;margin-left: 13px">
+          {{ order.tuan_number }}人团
+        </div>
         <div class="totalPrice">
           共{{ order.cartInfo.length || 0 }}件商品，总金额
           <span class="money font-color-red">￥{{ order.pay_price }}</span>
@@ -156,6 +164,13 @@
 
             <div class="bnt bg-color-red" @click="takeOrder(order)">
               确认收货
+            </div>
+          </template>
+
+          <template v-if="order._status._type === -1">
+
+            <div class="bnt bg-color-red" >
+              返佣:{{order.cartInfo[0]["back_money"]}}
             </div>
           </template>
 

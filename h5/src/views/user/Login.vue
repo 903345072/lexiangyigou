@@ -122,6 +122,14 @@
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-code_1"></use>
             </svg>
+            <input type="text" placeholder="输入姓名" v-model="name" />
+          </div>
+        </div>
+        <div class="item">
+          <div>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-code_1"></use>
+            </svg>
             <input type="text" placeholder="输入邀请码" v-model="invite_code" />
           </div>
         </div>
@@ -175,7 +183,7 @@
       </div>
       <div style="margin-top: 0.1rem">
         <label>
-          <input type="checkbox" style="border: solid 1px #1673ff;height: 0.5rem;width: 0.5rem;-webkit-appearance:button" v-bind:checked="is_agree" v-on:click="handleDisabled" />
+          <input type="checkbox" style="" v-bind:checked="is_agree" v-on:click="handleDisabled" />
           我仔细阅读并同意网站<router-link style="color:blue" :to="{path:'/agreement'}">用户注册协议</router-link>
         </label>
       </div>
@@ -216,6 +224,7 @@ export default {
       captcha: "",
       formItem: 1,
       type: "login",
+      name: "",
       logoUrl: "",
       keyCode: "",
       codeUrl: "",
@@ -359,7 +368,8 @@ export default {
         account: that.account,
         captcha: that.captcha,
         password: that.password,
-        spread: cookie.get("spread")
+        spread: cookie.get("spread"),
+        name: this.name
       })
         .then(res => {
           that.$dialog.success(res.msg);
@@ -387,7 +397,7 @@ export default {
       if (that.formItem == 2) that.type = "register";
       await registerVerify({
         phone: that.account,
-        type: that.type,
+        type: "register",
         key: that.keyCode,
         code: that.codeVal
       })

@@ -91,7 +91,7 @@ class StoreCategory extends BaseModel
 
     //获取栏目对应的商品
     public function product(){
-        return $this->hasMany(StoreProduct::class,'cate_id','id')->where('is_show',1)->where("is_intergral_pro",0);
+        return $this->hasMany(StoreProduct::class,'cate_id','id')->where('is_del',0)->where('is_show',1)->where("is_intergral_pro",0)->order("price asc");
     }
 
 }

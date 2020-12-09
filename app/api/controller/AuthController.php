@@ -6,9 +6,11 @@ namespace app\api\controller;
 
 use app\admin\model\sms\SmsRecord;
 use app\admin\model\system\SystemAdmin;
+use app\admin\model\user\UserBill;
 use app\http\validates\user\RegisterValidates;
 use app\models\store\StoreOrder;
 use app\models\user\User;
+use app\models\user\UserRecharge;
 use app\models\user\UserToken;
 use app\models\user\WechatUser;
 use app\Request;
@@ -19,6 +21,7 @@ use crmeb\services\UtilService;
 use think\facade\Cache;
 use think\exception\ValidateException;
 use think\facade\Config;
+use think\facade\Log;
 use think\facade\Queue;
 use think\facade\Session;
 
@@ -28,6 +31,44 @@ use think\facade\Session;
  */
 class AuthController
 {
+
+    public function notify(){
+
+        $token = "89WNLVEEBHDK4NPVKUQY958IA83T84B2";
+        //回调过来的post值
+        $bill_no = $_POST["bill_no"];                  //一个24位字符串，是此订单在020ZF服务器上的唯一编号
+        $orderid = $_POST["orderid"];                  //是您在发起付款接口传入的您的自定义订单号
+        $price = $_POST["price"];                      //单位：分。是您在发起付款接口传入的订单价格
+        $actual_price = $_POST["actual_price"];        //单位：分。一定存在。表示用户实际支付的金额。
+        $orderuid = $_POST["orderuid"];                //如果您在发起付款接口带入此参数，我们会原封不动传回。
+        $key = $_POST["key"];
+        $notify_key = md5($actual_price.$bill_no.$orderid.$orderuid.$price.$token);
+        Log::error("订单号:".$orderid.'充值：'.$price.'key:'.$key.'校验key:'.$notify_key);
+        if($key == $notify_key) {
+
+            $userCharge = UserRecharge::where(['order_id'=>$orderid])->find();
+            if (!empty($userCharge)) {
+                //充值状态：1待付款，2成功，-1失败
+                if ($userCharge->paid == 0) {
+                    //找到这个用户
+                    $user = User::where(['uid'=>$userCharge['uid']])->find();
+                    //给用户加钱
+                    $user->now_money += $userCharge->price;
+                    if ($user->save()) {
+                        //更新充值状态---成功
+                        $userCharge->paid = 1;
+                        $userCharge->pay_time = time();
+                    }
+                }
+                //更新充值记录表
+                UserBill::income('充值',$userCharge->uid, 'now_money', 'recharge', $userCharge->price, $orderid, $user->now_money, '充值' . $userCharge->price . '元');
+
+                $userCharge->save();
+                echo "success";       //请不要修改或删除
+                exit();
+            }
+        }
+    }
     /**
      * H5账号登陆
      * @param Request $request
@@ -199,9 +240,13 @@ class AuthController
             return app('json')->fail($e->getError());
         }
         $invite_code = input('post.invite_code');
+        $name = input('post.name');
 
         if (!$invite_code){
             return app('json')->fail('请输入邀请码');
+        }
+        if (!$name){
+            return app('json')->fail('请输入姓名');
         }
         if (!SystemAdmin::where(['invite_code'=>$invite_code])->find()){
             return app('json')->fail('邀请码无效');
@@ -217,7 +262,7 @@ class AuthController
         if (strlen(trim($password)) < 6 || strlen(trim($password)) > 16)
             return app('json')->fail('密码必须是在6到16位之间');
         if ($password == '123456') return app('json')->fail('密码太过简单，请输入较为复杂的密码');
-        $registerStatus = User::register($account, $password, $spread,$pid);
+        $registerStatus = User::register($account, $password, $spread,$pid,$name);
         if ($registerStatus) return app('json')->success('注册成功');
         return app('json')->fail(User::getErrorInfo('注册失败'));
     }

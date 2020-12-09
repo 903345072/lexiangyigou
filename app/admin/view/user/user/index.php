@@ -65,7 +65,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">姓名编号：</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="nickname" lay-verify="nickname" style="width: 100%" autocomplete="off" placeholder="请输入姓名、编号、手机号" class="layui-input">
+                                <input type="text" name="nickname" lay-verify="nickname" style="width: 100%" autocomplete="off" placeholder="请输入账号、姓名、编号、手机号" class="layui-input">
                             </div>
                         </div>
 
@@ -156,10 +156,15 @@
                         <?php endif;?>
 
                     </script>
+                  
                     <script type="text/html" id="barDemo">
-                        <?php if($admin_info['power'] >= 9999): ?>
+                      <?php if($admin_info['power'] >= 9998): ?>
+                     <button type="button" class="layui-btn layui-btn-xs" lay-event="delete">删除</button> <?php endif;?>
+                        <?php if($admin_info['power'] >= 9998): ?>
                         <button type="button" class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button>
-                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button><?php endif;?>
+                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
+                       
+                        <?php endif;?>
                         <ul class="layui-nav-child layui-anim layui-anim-upbit">
                             <li>
                                 <a href="javascript:void(0);" lay-event="money">
@@ -224,11 +229,12 @@
         return [
             {type:'checkbox'},
             {field: 'uid', title: '编号',event:'uid',width:'4%',align:'center'},
+            {field: 'account', title: '账号',event:'uid',width:'8%',align:'center'},
             {field: 'nickname', title: '姓名',templet:'#nickname',align:'center'},
             {field: 'phone', title: '手机号',align:'center',width:'8%'},
             {field: 'now_money', title: '余额',width:'6%',sort:true,event:'now_money',align:'center'},
-            {field: 'pay_count', title: '购买次数',align:'center',width:'6%'},
-            {field: 'extract_count_price', title: '累计提现',align:'center',width:'6%'},
+            {field: 'pay_count', title: '购买次数',align:'center',width:'4%'},
+            {field: 'extract_count_price', title: '累计提现',align:'center',width:'4%'},
             {field: 'integral', title: '积分',width:'6%',sort:true,event:'integral',align:'center'},
             {field: 'spread_uid_nickname', title: '推荐人',align:'center'},
 
@@ -239,7 +245,7 @@
             <?php if($admin_info['power'] < 9999):?>
             {field: 'status', title: '状态',templet:"#is_normal",width:'6%',align:'center'},
             <?php endif;?>
-            {field: 'operate', title: '操作', width: '10%', align: 'center', toolbar: '#barDemo'}
+            {field: 'operate', title: '操作', width: '15%', align: 'center', toolbar: '#barDemo'}
         ];
     });
     //页面刷新时加载
@@ -310,6 +316,23 @@
                     });
                 },{
                     title:'您确定要清除【'+data.nickname+'】的会员等级吗？',
+                    text:'清除后无法恢复请谨慎操作',
+                    confirm:'是的我要清除'
+                })
+                break;
+            case 'delete':
+                $eb.$swal('delete',function(){
+                    $eb.axios.get(layList.U({a:'del_member',q:{uid:data.uid}})).then(function(res){
+                        if(res.status == 200 && res.data.code == 200) {
+                            $eb.$swal('success',res.data.msg);
+                            layList.reload();
+                        }else
+                            return Promise.reject(res.data.msg || '删除失败')
+                    }).catch(function(err){
+                        $eb.$swal('error',err);
+                    });
+                },{
+                    title:'您确定要删除【'+data.nickname+'】吗？',
                     text:'清除后无法恢复请谨慎操作',
                     confirm:'是的我要清除'
                 })

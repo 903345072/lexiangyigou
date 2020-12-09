@@ -205,7 +205,7 @@ class StoreProduct extends BaseModel
     {
         $model = self::where('is_hot', 1)->where('is_del', 0)->where('is_intergral_pro', 0)->where('mer_id', 0)
             ->where('stock', '>', 0)->where('is_show', 1)->field($field)
-            ->order('sort DESC, id DESC');
+            ->order('sort DESC, price asc');
         if ($limit) $model->limit($limit);
         $list = $model->select();
         $list = count($list) ? $list->toArray() : [];

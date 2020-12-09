@@ -15,12 +15,7 @@
         <div class="pictrue"><img :src="followUrl" /></div>
         <div class="mask" @click="closeFollowCode"></div>
       </div>
-      <div class="header acea-row row-center-wrapper" ref="header">
-        <div class="logo"><img :src="logoUrl" v-if="logoUrl" /></div>
-        <router-link :to="'/search'" class="search acea-row row-middle">
-          <span class="iconfont icon-xiazai5"></span>搜索商品
-        </router-link>
-      </div>
+    
 
         <div class="wrapper">
           <div class="slider-banner banner">
@@ -55,7 +50,7 @@
             </router-link>
 
             <router-link :to="{
-              path: '/category/'+index,
+              path: '/category/'+(index+1),
               }" v-for="(item, index) in categoryOne" href="./index.php?i=2&amp;c=entry&amp;do=ptlist&amp;m=sjlm_tg&amp;kindid=2" class="aui-palace-grid">
               <div class="aui-palace-grid-icon">
                 <img :src=item.pic alt="">
@@ -70,16 +65,16 @@
         <!--活动版块-->
                   <div class="shouyindex">
                     <div class="xinrenzs">
-                      <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/xinrenzs.png" alt="">
+                      <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/xinrenzs.png" alt="">
                       <div class="xinrenzs_con">
                         <!-- <a href="./index.php?i=2&c=entry&do=RegistGift&m=sjlm_tg" class="aui-palace-grid"> -->
                         <a href="#" class="aui-palace-grid">
-                          <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/xinrenleft.png" alt="">
+                          <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/xinrenleft.png" alt="">
                         </a>
                         <router-link :to="{
                           path:'/intergralProduct/'
                         }"  class="aui-palace-grid">
-                          <img style="margin-left: 12px;" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/xinrenzsright.png" alt="">
+                          <img style="margin-left: 12px;" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/xinrenzsright.png" alt="">
                         </router-link>
                       </div>
 
@@ -88,10 +83,10 @@
 
                     <div class="zuixingp">
                       <router-link :to="{path:'/hot_new_goods/3'}" class="aui-palace-grid">
-                        <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/xingpleft.png" alt="">
+                        <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/xingpleft.png" alt="">
                       </router-link>
                       <router-link :to="{path:'/user/sign'}" class="aui-palace-grid">
-                        <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/qiandaoright.png" alt="">
+                        <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/qiandaoright.png" alt="">
                       </router-link>
                     </div>
                   </div>
@@ -136,7 +131,7 @@
                     </div>
                     <div class="rxcenter">
                       <div class="spjg"><span>¥</span>{{item.price}}</div>
-                      <img class="rxgwimg" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/gouwuc.png" alt="">
+                      <img class="rxgwimg" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/gouwuc.png" alt="">
                     </div>
                   </div>
 
@@ -399,10 +394,10 @@ export default {
       return this.$refs.mySwiper.swiper;
     },
     newSwiper() {
-      return this.$refs.newSwiper.swiper;
+      return null;
     },
     recommendSwiper() {
-      return this.$refs.recommendSwiper.swiper;
+      return null;
     }
   },
   watch: {
@@ -410,24 +405,23 @@ export default {
       if (to === 0) {
         this.tapActive = 0;
         this.swiper.autoplay.start();
-        this.newSwiper.autoplay.start();
-        this.recommendSwiper.autoplay.start();
+
+
       } else {
         this.swiper.autoplay.stop();
-        this.newSwiper.autoplay.stop();
-        this.recommendSwiper.autoplay.stop();
+
+
       }
     },
     $route(n) {
       if (n.name === "Index") {
         this.getCoupon();
         this.swiper.autoplay.start();
-        this.newSwiper.autoplay.start();
-        this.recommendSwiper.autoplay.start();
+
+
       } else {
         this.swiper.autoplay.stop();
-        this.newSwiper.autoplay.stop();
-        this.recommendSwiper.autoplay.stop();
+
       }
     }
   },

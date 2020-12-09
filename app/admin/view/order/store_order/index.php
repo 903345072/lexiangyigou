@@ -120,7 +120,10 @@
             <div class="layui-card">
                 <div class="layui-card-header">订单列表</div>
                 <div class="layui-card-body">
+                    <div class="layui-btn-container" id="container-action">
+                        <button class="layui-btn layui-btn-sm" data-type="del_order">批量删除订单</button>
 
+                    </div>
                     <table class="layui-hide" id="List" lay-filter="List"></table>
                     <!--订单-->
                     <script type="text/html" id="order_id">
@@ -132,6 +135,10 @@
                     <script type="text/html" id="userinfo">
                         {{d.nickname==null ? '暂无信息':d.nickname}}/{{d.uid}}
                     </script>
+                     <script type="text/html" id="tuan_number">
+                        {{d.tuan_number}}人团
+                    </script>
+                 
                     <!--分销员信息-->
                     <script type="text/html" id="spread_uid">
                         {{# if(d.pid != 0){ }}
@@ -180,16 +187,17 @@
                     </script>
 
                     <script type="text/html" id="act">
-
+                        <?php if($admin_info['power'] >= 9998): ?>
                         {{# if(d._status==1){ }}
                         <button class="layui-btn  layui-btn-xs " style="background-color: red" type="button" lay-event="refuse">
                              拒绝
                         </button>
-
                         <button class="layui-btn layui-btn-xs" style="background-color: green" type="button" lay-event="pass">
                              通过
                         </button>
                         {{# } ;}}
+                    <?php endif;?>
+
 
                         {{# if(d._status==2 ){ }}
                         <?php if($admin_info['power'] >= 9999): ?>
@@ -300,11 +308,7 @@
                         </ul>
                         {{#  }else if(d._status==5){ }}
                         {{# if(d.shipping_type==1){ }}
-                        <?php if($admin_info['power'] >= 9999): ?>
-                        <button class="btn btn-primary btn-xs" type="button"
-                                onclick="$eb.createModalFrame('发送货','{:Url('order_goods')}?id={{d.id}}',{w:400,h:250})">
-                            <i class="fa fa-cart-plus"></i> 发送货
-                        </button><?php endif;?>
+
                         {{# } }}
 
 <?php if($admin_info['power'] >= 9999): ?>
@@ -500,7 +504,9 @@
             {field: 'paid', title: '支付状态', templet: '#paid', width: '8%', align: 'center'},
             {field: 'status', title: '订单状态', templet: '#status', width: '8%', align: 'center'},
             {field: 'add_time', title: '下单时间', width: '10%', sort: true, align: 'center'},
-            {field: 'right', title: '操作', align: 'center', toolbar: '#act', width: '15%'},
+            {field: 'tuan_number', title: '团购类型', width: '6%', sort: true, align: 'center',templet: '#tuan_number'},
+            
+            {field: 'right', title: '操作', align: 'center', toolbar: '#act', width: '9%'},
         ];
     });
     layList.tool(function (event, data, obj) {
@@ -623,6 +629,7 @@
                     $eb.axios.post(url, {ids: ids}).then(function (res) {
                         if (res.status == 200 && res.data.code == 200) {
                             $eb.$swal('success', res.data.msg);
+                            window.location.reload()
                         } else
                             return Promise.reject(res.data.msg || '删除失败')
                     }).catch(function (err) {

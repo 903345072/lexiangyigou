@@ -346,7 +346,7 @@ class StoreProduct extends AuthController
         } else {
             $data['add_time'] = time();
             $data['code_path'] = '';
-            print_r($data);die;
+        
             $res = ProductModel::create($data);
 
             $description = $data['description'];

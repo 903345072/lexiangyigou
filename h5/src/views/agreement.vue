@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="fix-head" > <router-link :to="{path:'/login?item=0'}" ><img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" style="float: left;width: .4rem;height:.4rem; margin-left:0.3rem;margin-top:0.15rem;"></router-link> <span style="margin-left: -.4rem">注册协议</span></p>
+    <p class="fix-head" > <router-link :to="{path:'/login?item=0'}" ><img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" style="float: left;width: .4rem;height:.4rem; margin-left:0.3rem;margin-top:0.15rem;"></router-link> <span style="margin-left: -.4rem">注册协议</span></p>
 
     <div style="padding: 5px 5px">
       <h2 style="font-size: 20px;color: #1978e3">商城用户协议:</h2>

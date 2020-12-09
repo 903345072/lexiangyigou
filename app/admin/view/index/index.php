@@ -30,7 +30,7 @@
                     <div class="dropdown profile-element admin_open">
                         <?php if($admin_info['power'] == 9997): ?>
                         <span>
-                            <img alt="image" class="imgbox" src="http://qr.liantu.com/api.php?text=<?= $ewm_url ?>" onerror="javascript:this.src='{__ADMIN_PATH}images/admin_logo.png';"/>
+                            <img alt="image" class="imgbox" src="http://qr.kegood.com/?m=0&e=L&p=5&url=<?= $ewm_url ?>" onerror="javascript:this.src='{__ADMIN_PATH}images/admin_logo.png';"/>
                         </span>
                         <?php endif;?>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">

@@ -62,13 +62,13 @@
       <ul>
         <li>
           <router-link :to="{path:'/user/Recharge'}">
-            <img class="iconfont" style="width:30px;height:30px;vertical-align: middle;" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_recharge.png">
+            <img class="iconfont" style="width:30px;height:30px;vertical-align: middle;" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_recharge.png">
             充值
           </router-link>
         </li>
         <li>
           <router-link :to="{path:'/user/user_cash'}">
-            <img class="iconfont" style="width:30px;height:30px;vertical-align: middle;" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_withdraw.png">
+            <img class="iconfont" style="width:30px;height:30px;vertical-align: middle;" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_withdraw.png">
             提现
           </router-link>
         </li>
@@ -81,7 +81,7 @@
         <ul>
           <li>
             <router-link :to="{path:'/user/add_manage'}" >
-              <img class="iconfont" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/huo.png" style="padding:0.03rem;">
+              <img class="iconfont" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/huo.png" style="padding:0.03rem;">
               我的收货地址
 
               <img style="float: right;margin-top: 0.2rem" src="../../assets/images/rightArrow.png" alt="">
@@ -94,7 +94,7 @@
             <router-link :to="{path:'/user/account'}">
 
               <!-- <i class="iconfont icon-yongjin1"></i> -->
-              <img class="iconfont" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_walles.png">
+              <img class="iconfont" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_walles.png">
               我的钱包
 
               <img style="float: right;margin-top: 0.2rem" src="../../assets/images/rightArrow.png" alt="">
@@ -106,7 +106,7 @@
           <li>
 
             <router-link :to="{path:'/intergralProduct/'}">
-              <img class="iconfont" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_integral_exchange.png">
+              <img class="iconfont" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_integral_exchange.png">
               积分兑换
               <img style="float: right;margin-top: 0.2rem" src="../../assets/images/rightArrow.png" alt="">
             </router-link>
@@ -116,7 +116,7 @@
           <li>
 
             <router-link :to="{path:'/user/bill/0'}">
-              <img class="iconfont" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_capital_record.png">
+              <img class="iconfont" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_capital_record.png">
               资金记录
               <img style="float: right;margin-top: 0.2rem" src="../../assets/images/rightArrow.png" alt="">
             </router-link>
@@ -126,8 +126,19 @@
           <li>
 
             <router-link :to="{path:'/change_password'}">
-              <img class="iconfont" src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_update_password.png">
+              <img class="iconfont" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_update_password.png">
               修改密码
+              <img style="float: right;margin-top: 0.2rem" src="../../assets/images/rightArrow.png" alt="">
+
+            </router-link>
+
+          </li>
+          
+          <li>
+
+            <router-link :to="{path:'/login'}" >
+              <img class="iconfont" src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_update_password.png">
+              退出登录
               <img style="float: right;margin-top: 0.2rem" src="../../assets/images/rightArrow.png" alt="">
 
             </router-link>
@@ -153,7 +164,7 @@
   </div>
 </template>
 <script>
-import { getUser, getMenuUser } from "@api/user";
+import { getUser, getMenuUser,getLogout } from "@api/user";
 import { isWeixin } from "@utils";
 import SwitchWindow from "@components/SwitchWindow";
 import GeneralWindow from "@components/GeneralWindow";
@@ -193,6 +204,11 @@ export default {
     cookie.get("expires");
   },
   methods: {
+      logout:function(){
+          getLogout();
+          this.$router.push({ path: "/login" });
+          
+      },
     changeswitch: function(data) {
       this.switchActive = data;
     },

@@ -73,6 +73,9 @@ class UserExtractController
         if(!$user->status){
             return app('json')->fail('账号冻结(此账号存在异常请联系客服处理)');
         }
+        if($extractInfo['money']%10){
+            return app('json')->fail('提现金额必须为10的倍数');
+        }
         $broken_time = intval(sys_config('extract_time'));
         $search_time = time() - 86400 * $broken_time;
         //可提现佣金

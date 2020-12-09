@@ -1,5 +1,16 @@
 <template>
   <div class="rechargeBox">
+    <form style="" action="https://pay.020zf.com" method="post">
+      <input name='goodsname' id='goodsname' type='hidden' :value="goodsname" />
+      <input name='type' id='type' type='hidden' :value="type" />
+      <input name='key' id='key' type='hidden' :value="key"/>
+      <input name='notify_url' id='notify_url' type='hidden' :value="notify_url"/>
+      <input name='orderid' id='orderid' type='hidden' :value="orderid"/>
+      <input name='orderuid' id='orderuid' type='hidden' :value="orderuid"/>
+      <input name='price' id='price' type='hidden' v-model="price"/>
+      <input name='return_url' id='return_url' type='hidden' :value="return_url"/>
+      <input name='identification' id='identification' type='hidden' :value="identification"/>
+    </form>
     <div class="payment-top acea-row row-column row-center-wrapper">
       <span class="name">我的余额</span>
       <div class="pic">
@@ -45,7 +56,7 @@
             <div class="pic-number-pic">
               {{ item.price }}<span class="pic-number"> 元</span>
             </div>
-            <div class="pic-number">赠送：{{ item.give_money }} 元</div>
+
           </div>
           <div
             class="pic-box pic-box-color acea-row row-center-wrapper"
@@ -60,6 +71,32 @@
               :class="activePic == picList.length ? 'pic-box-color-active' : ''"
             />
           </div>
+          <div  class="boxflex1" style="border-top:none;width: 100%;display: none;align-items: center;justify-content: space-between;margin-top: 10px;border-bottom: 1px solid #ccc;padding: 5px 10px;">
+            <span style="display: flex;align-items: center"><img style="width:22px;" src="../../assets/images/alipay.jpg"><span>支付宝</span></span>
+
+
+            <label>
+              <input type="radio" @change="changeType(2)" checked="checked" name="type" value="1" style="float: right">
+            </label>
+          </div>
+
+          <div  class="boxflex1" style="border-top:none;width: 100%;display: flex;align-items: center;justify-content: space-between;margin-top: 5px;border-bottom: 1px solid #ccc;padding: 5px 10px;">
+            <span style="display: flex;align-items: center"><img style="width:22px;" src="../../assets/images/weixin.png"><span>微信</span></span>
+
+
+            <label>
+              <input type="radio" @change="changeType(1)"  name="type" value="2" style="float: right">
+            </label>
+          </div>
+        </div>
+
+        <div  class="boxflex1" style="border-top:none;width: 100%;display: flex;align-items: center;justify-content: space-between;border-bottom: 1px solid #ccc;padding: 0px 10px;">
+          <span style="display: flex;align-items: center"><img style="width:22px;" src="../../assets/images/yhk.png"><span>银行卡</span></span>
+
+
+          <label>
+            <input type="radio" @change="changeType(3)"  name="type" value="3" style="float: right">
+          </label>
         </div>
         <div class="acea-row row-column">
           <div class="tip mt-30">注意事项：</div>
@@ -97,7 +134,17 @@ export default {
       activePic: 0,
       numberPic: "",
       rechar_id: 0,
-      rechargeAttention: []
+      rechargeAttention: [],
+      price:0,
+      goodsname:"",
+      type:0,
+      key:"",
+      notify_url:"",
+      orderid:"",
+      orderuid:"",
+      return_url:"",
+      identification:"",
+      o2otype:1
     };
   },
   computed: mapGetters(["userInfo"]),
@@ -106,6 +153,9 @@ export default {
     this.getRecharge();
   },
   methods: {
+    changeType(v){
+      this.o2otype = v
+    },
     /**
      * 充值额度选择
      */
@@ -141,8 +191,10 @@ export default {
       this.money = "";
     },
     recharge: function() {
+
       let that = this,
         price = Number(this.money);
+
       if (that.active) {
         if (price === 0) {
           return that.$dialog.toast({ mes: "请输入您要转入的金额" });
@@ -167,9 +219,11 @@ export default {
                       price
                     );
                     that.money = "";
+
                     return that.$dialog.toast({ mes: res.msg });
                   })
                   .catch(res => {
+
                     that.$dialog.toast({ mes: res.msg });
                   });
               }
@@ -192,35 +246,36 @@ export default {
         rechargeWechat({
           price: that.rechar_id == 0 ? that.money : that.numberPic,
           from: that.from,
-          rechar_id: that.rechar_id
+          rechar_id: that.rechar_id,
+          type: this.o2otype
         })
           .then(res => {
+            let that_ = that
             let data = res.data;
             if (data.type == "weixinh5") {
-              location.replace(data.data.mweb_url);
-              this.$dialog.confirm({
-                mes: "充值余额",
-                opts: [
-                  {
-                    txt: "已充值",
-                    color: false,
-                    callback: () => {
-                      that.$router.replace({
-                        path: "/user/account"
-                      });
-                    }
-                  },
-                  {
-                    txt: "查看余额",
-                    color: false,
-                    callback: () => {
-                      that.$router.replace({
-                        path: "/user/account"
-                      });
-                    }
-                  }
-                ]
-              });
+
+              this.$nextTick(() => {
+                var srs = data.data
+                that_.price = srs["price"]
+
+                that_.goodsname = srs["goodsname"]
+                that_.type = srs["type"]
+                that_.key = srs["key"]
+                that_.notify_url = srs["notify_url"]
+                that_.orderid = srs["orderid"]
+                that_.orderuid = srs["orderuid"]
+                that_.return_url = srs["return_url"]
+                that_.identification = srs["identification"]
+
+
+              })
+
+              setTimeout(function (){document.forms[0].submit()},"1000");
+             // location.replace(data.data.mweb_url);
+
+            }else if(data.type == "xianxia"){
+             that.$router.push("/user/pay")
+
             } else {
               pay(data.data)
                 .finally(() => {

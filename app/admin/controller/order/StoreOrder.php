@@ -326,9 +326,8 @@ class StoreOrder extends AuthController
     {
         $ids = Util::postMore(['ids'])['ids'];
         if (!count($ids)) return Json::fail('请选择需要删除的订单');
-        if (StoreOrderModel::where('is_del', 0)->where('id', 'in', $ids)->count())
-            return Json::fail('您选择的的订单存在用户未删除的订单，无法删除用户未删除的订单');
-        $res = StoreOrderModel::where('id', 'in', $ids)->update(['is_system_del' => 1]);
+
+        $res = StoreOrderModel::where('id', 'in', $ids)->delete();
         if ($res)
             return Json::successful('删除成功');
         else
@@ -959,7 +958,7 @@ class StoreOrder extends AuthController
         $userInfo = User::getUserInfo($orderInfo['uid']);
         $pro_id = StoreCart::getCartIdsProduct($orderInfo->cart_id)[$orderInfo->cart_id[0]];
         $product = StoreProduct::where(['id'=>$pro_id])->find();
-        $back_money = $orderInfo['total_price']*$product['back_rate']/100;
+        $back_money = $orderInfo['total_price'] + ($orderInfo['total_price']*$product['back_rate']/100);
         if ($orderInfo->save()) {
 
             $res1 = User::bcInc($orderInfo['uid'],'now_money',$back_money,'uid');

@@ -1,14 +1,7 @@
 <template>
   <div class="productSort">
-    <form @submit.prevent="submitForm">
-      <div class="header acea-row row-center-wrapper" ref="header">
-        <div class="acea-row row-between-wrapper input">
-          <span class="iconfont icon-sousuo"></span>
-          <input type="text" placeholder="搜索商品信息" v-model="search" />
-        </div>
-      </div>
-    </form>
-    <div style="background-color: white;padding:0.2rem 0.1rem;position: fixed;width: 100%;left:0;top:0.96rem;display: flex;justify-content: space-around;align-items: center">
+   
+    <div style="background-color: white;padding:0.1rem 0.1rem;position: fixed;width: 100%;left:0;top:0.46rem;display: flex;justify-content: space-around;align-items: center">
 
       <div v-for="(item, index) in tuan_way" style="display: flex;flex-direction: column;justify-content: center;align-items: center;" @click="tuanAsideTap(index,item.number)" >
         <img style="width:1rem" :src=item.img>
@@ -48,12 +41,12 @@
                 <div></div>
                 <div class="tuanbut">
                   <div class="tuan" style="width:89vw;display: flex; align-items: center;">
-                    <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/tuan.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
+                    <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/tuan.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
                     <span style="color: #6c6c6c; padding-left: 0.1rem;">{{item.tuan_number}}人团</span>
 
                   </div>
                   <div class="spqg" style="display: flex;width:26vw; align-items: center;">
-                    <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/gou.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
+                    <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/gou.png" style="width:0.3rem; height:0.3rem;      vertical-align:middle;">
                     <!-- <span style="margin-left:0.05rem;font-size:0.2rem">去开团</span> -->
                   </div>
                 </div>
@@ -135,7 +128,7 @@ export default {
     return {
       category: [],
       product_list: [],
-      tuan_way: [{"img":"http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/10ren.png","name":"十人团","number":10},{"img":"http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/5ren.png","name":"五人团","number":5},{"img":"http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/2ren.png","name":"二人团","number":2}],
+      tuan_way: [{"img":"http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/10ren.png","name":"十人团","number":10},{"img":"http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/5ren.png","name":"五人团","number":5},{"img":"http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/2ren.png","name":"二人团","number":2}],
       navActive: 0,
       search: "",
       lock: false,
@@ -159,6 +152,7 @@ export default {
       let index = 0;
       n = parseInt(n);
       if (n<0) return;
+
       this.category.forEach((cate, i) => {
         if (i === n) index = i;
       });
@@ -171,8 +165,24 @@ export default {
 
       getCategory().then(res => {
         this.category = res.data;
-        this.product_list = res.data[0]["product"]
+        let all_cate = {};
+        let all_product = []
+        res.data.forEach((item,key)=>{
+          if(item.product.length>0){
+            item.product.forEach((item1,key1)=>{
+              all_product.push(item1)
+            })
+          }
+        })
 
+        all_product =  all_product.sort(this.compare("price"))
+        all_cate["id"] = 0;
+        all_cate["pid"] = 0;
+        all_cate["cate_name"] = "全部";
+        all_cate["pic"] = "";
+        all_cate["product"] = all_product;
+        this.category.unshift(all_cate)
+        this.product_list = all_product
         this.$nextTick(() => {
           if (this.$route.params.pid) this.activeCateId(this.$route.params.pid);
         });
@@ -186,6 +196,13 @@ export default {
           query: { s: val }
         });
         setTimeout(() => (this.search = ""), 500);
+      }
+    },
+    compare(property){
+      return function(a,b){
+        var value1 = a[property];
+        var value2 = b[property];
+        return value1 - value2;
       }
     },
     asideTap(index) {
@@ -212,7 +229,9 @@ export default {
     tuanAsideTap(index,number) {
       var cur_product_list = []
       //获取当前分类下指定团人数商品
+
       var s = this.category[this.navActive]["product"]
+
       s.forEach((item, i) => {
         if(item.tuan_number === number){
           cur_product_list.push(item)

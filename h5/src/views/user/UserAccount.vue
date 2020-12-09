@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <img src="http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" class="fanhui" onclick="javascript:history.go(-1)">
+    <img src="http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/Icon_left_arrow.png" class="fanhui" onclick="javascript:history.go(-1)">
     <div class="yue">
       <div style="font-size: 0.5rem;">余额</div>
       <div>￥{{now_money}}</div>
@@ -15,7 +15,7 @@
     height: .5rem;
   }
   .bg {
-    background: url("http://meida.vwbxyhj.cn//addons/sjlm_tg/template/mobile/images/qiabao.png");
+    background: url("http://meida.lxt7.cn//addons/sjlm_tg/template/mobile/images/qiabao.png");
     background-size: auto;
     background-size: 100% auto;
   }
